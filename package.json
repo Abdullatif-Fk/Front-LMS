@@ -1,0 +1,22 @@
+{
+  "name": "Front-LMS",
+  "version": "1.0.0",
+  "description": "front end repos for LMS project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "front": "cd front && npm start",
+    "start": "cd front && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdullatif-Fk/Front-LMS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abdullatif-Fk/Front-LMS/issues"
+  },
+  "homepage": "https://github.com/Abdullatif-Fk/Front-LMS#readme"
+}
