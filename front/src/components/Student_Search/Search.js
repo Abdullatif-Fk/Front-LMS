@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { Wrap } from "./style.js";
-import { ListGroup, Row, Col, Spinner } from "react-bootstrap";
+import ModalEdit from "./ModalEdit";
+import { ListGroup, Row, Col, Spinner, Modal, Button } from "react-bootstrap";
 function Search() {
-  const [students, setStudents] = useState([]);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [id, setId] = useState("falsee");
   const [arr, setArray2] = useState(0);
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(0);
   const [Pagination, setPagination] = useState({
     data: students.map((value, index) => ({
       id: value.id,
@@ -18,6 +24,7 @@ function Search() {
     pageCount: 0,
     currentData: [],
   });
+
   useEffect(() => {
     try {
       fetch("http://localhost:8000/api/Fetch_Students", {
@@ -30,23 +37,26 @@ function Search() {
       })
         .then((res) => res.json())
         .then((json) => {
-          setPagination({
-            data: json.message.data.map((value, index) => ({
-              id: value.id,
-              class_id: value.class_id,
-              section_id: value.section_id,
-              student_name: value.student_name,
-            })),
-            offset: 0,
-            numberPerPage: 1,
-            pageCount: 0,
-            currentData: [],
-          });
+          if (json.status != 400) {
+            setPagination({
+              data: json.message.data.map((value, index) => ({
+                id: value.id,
+                class_id: value.class_id,
+                section_id: value.section_id,
+                student_name: value.student_name,
+              })),
+              offset: 0,
+              numberPerPage: 1,
+              pageCount: 0,
+              currentData: [],
+            });
+          } else alert(json.message);
+          setLoading(1);
         });
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [arr]);
 
   useEffect(() => {
     setPagination((prevState) => ({
@@ -100,7 +110,7 @@ function Search() {
     }
   };
 
-  if (Pagination.data.length == 0) {
+  if (loading == 0) {
     return (
       <div style={{ position: "absolute", left: "50%" }}>
         <div
@@ -116,52 +126,74 @@ function Search() {
       </div>
     );
   } else {
-    return (
-      <Wrap>
-        <ListGroup.Item>
-          {Pagination.currentData &&
-            Pagination.currentData.map((item, index) => (
-              <Row key={item.id}>
-                <Col sm={3}>Student Name: {item.student_name}</Col>{" "}
-                <Col sm>Class: {item.class_id}</Col>
-                <Col sm>Section: {item.section_id}</Col>
-                <Col sm>
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => {
-                      // toggleModalForm();
-                      // setId(item._id);
-                    }}
-                  >
-                    Edit
-                  </button>
-                </Col>
-                <Col sm>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => {
-                      del(item.id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </Col>
-              </Row>
-            ))}
-        </ListGroup.Item>
+    if (Pagination.data.length == 0)
+      return (
+        <div style={{ position: "absolute", left: "50%" }}>
+          <div
+            style={{
+              position: "relative",
+              left: "-50%",
+            }}
+          >
+            Couldn't find any student...
+          </div>
+        </div>
+      );
+    else
+      return (
+        <Wrap>
+          <ListGroup.Item>
+            {Pagination.currentData &&
+              Pagination.data.map((item, index) => (
+                <Row key={item.id}>
+                  <Col sm={3}>Student Name: {item.student_name}</Col>{" "}
+                  <Col sm>Class: {item.class_id}</Col>
+                  <Col sm>Section: {item.section_id}</Col>
+                  <Col sm>
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => {
+                        setId(item.id);
+                        handleShow();
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </Col>
+                  <Col sm>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => {
+                        del(item.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </Col>
+                </Row>
+              ))}
+          </ListGroup.Item>
 
-        <ReactPaginate
-          previousLabel={" ← Previous"}
-          nextLabel={"Next → "}
-          pageCount={Pagination.pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          activeClassName={"active"}
-        />
-      </Wrap>
-    );
+          <ReactPaginate
+            previousLabel={" ← Previous"}
+            nextLabel={"Next → "}
+            pageCount={Pagination.pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+          />
+
+          <ModalEdit
+            show={show}
+            handleClose={handleClose}
+            id={id}
+            arr={arr}
+            setArray2={setArray2}
+          />
+        </Wrap>
+      );
   }
 }
 export default Search;
