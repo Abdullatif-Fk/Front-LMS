@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import "./ModalStyle.scss";
 function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   const [student_info, SetStudent_info] = useState([]);
+  const [sections, SetSections] = useState([]);
+
   function handleInputChange(e) {
     const { value, name } = e.target;
     if (name == "Image") {
@@ -18,7 +20,6 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
     }
   }
   function submit(e) {
-    console.log(1111111111111111111111);
     fetch(`http://localhost:8000/api/Edit_Student/${id}`, {
       method: "put",
       headers: {
@@ -35,7 +36,19 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   }
   useEffect(() => {
     try {
-      if (id != "falsee")
+      if (id != "falsee") {
+        fetch(`http://localhost:8000/api/Fetch_Sections`, {
+          method: "post",
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((json) => {
+            SetSections(json.message);
+          });
+
         fetch(`http://localhost:8000/api/Fetch_Student_By_Id/${id}`, {
           method: "post",
           headers: {
@@ -48,6 +61,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             SetStudent_info(json.message);
             console.log(student_info);
           });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -110,11 +124,10 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
               type="text"
               placeholder="Section name"
               name="section_name"
-              defaultValue={student_info.section_name}
-              onChange={handleInputChange}
+              value={student_info.section_name}
             />
           </Form.Group>
-          <Form.Group controlId="formBasicPassword">
+          {/* <Form.Group controlId="formBasicPassword">
             <Form.Label>Class Name</Form.Label>
             <Form.Control
               type="text"
@@ -123,6 +136,25 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
               defaultValue={student_info.class_name}
               onChange={handleInputChange}
             />
+          </Form.Group> */}
+          <Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Select Class</Form.Label>
+            <Form.Control
+              as="select"
+              name="section_name"
+              defaultValue={student_info.section_name}
+              onChange={handleInputChange}
+            >
+              {sections.map((o) =>
+                o.section_name == student_info.section_name ? (
+                  <option key={o.section_name} selected>
+                    {o.section_name}
+                  </option>
+                ) : (
+                  <option key={o.section_name}>{o.section_name}</option>
+                )
+              )}
+            </Form.Control>
           </Form.Group>
           {/* <Form.Group controlId="formBasicCheckbox">
             <Form.File type="file" name="Image" onChange={handleInputChange} />

@@ -142,6 +142,19 @@ function Search() {
     else
       return (
         <Wrap>
+          <Row>
+            <Col sm={9}></Col>
+            <Col className="left mb-2">
+              <button
+                className="btn btn-primary btn-circle btn-xl"
+                style={{ borderRadius: "45%" }}
+                onClick={() => {}}
+              >
+                Add
+              </button>
+            </Col>
+          </Row>
+
           <ListGroup.Item>
             {Pagination.currentData &&
               Pagination.data.map((item, index) => (
@@ -173,7 +186,6 @@ function Search() {
                 </Row>
               ))}
           </ListGroup.Item>
-
           <ReactPaginate
             previousLabel={" ← Previous"}
             nextLabel={"Next → "}
@@ -184,7 +196,6 @@ function Search() {
             containerClassName={"pagination"}
             activeClassName={"active"}
           />
-
           <ModalEdit
             show={show}
             handleClose={handleClose}
