@@ -1,10 +1,9 @@
-import logo from "./logo.svg";
 import "./App.scss";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import SplitPane from "react-split-pane";
 import { connect } from "react-redux";
-
+import { Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 
 //   return (
@@ -17,52 +16,55 @@ import { useSelector, useDispatch } from "react-redux";
 // }
 import simpleAction from "./store/actions/simpleaction";
 import Search from "./components/Student_Search/Search";
-function App() {
-  const result = useSelector((state) => state.simpleReducer.result);
-  const dispatch = useDispatch();
-  console.log(result);
-  return (
-    <div className="App container mt-5">
-      <header className="App-header">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {/* {result}
-          <button
-            className="btn btn-primary btn-circle btn-xl"
-            style={{ borderRadius: "45%" }}
-            onClick={() => dispatch(simpleAction())}
-          >
-            Add
-          </button> */}
-          <ul
-            style={{
-              listStyleType: "none",
-              margin: "auto",
-            }}
-          >
-            <li
-              style={{
-                margin: "auto",
-              }}
-            >
-              <a href="/">Students</a>
-            </li>
-            <li>
-              <a href="/submission">Submission</a>
-            </li>
-            <li>
-              <a href="/attendance">Attendance</a>
-            </li>
-            <li>
-              <a href="/admincontroller">Admin Controller</a>
-            </li>
-          </ul>
-        </div>
 
+import {
+  Sidebar,
+  InputItem,
+  DropdownItem,
+  Icon,
+  Item,
+  Logo,
+  LogoText,
+} from "react-sidebar-ui";
+import { WrapApp } from "./style";
+
+const App = () => {
+  return (
+    <WrapApp className="App-header">
+      <Sidebar bgColor="black" isCollapsed={false}>
+        <Logo
+          image="https://media2.giphy.com/media/eNAsjO55tPbgaor7ma/source.gif"
+          imageName="react logo"
+        />
+        <LogoText>LMS</LogoText>
+        <br></br>
+        <Item bgColor="black">
+          <Icon>
+            <i className="fas fa-home" />
+          </Icon>
+          <a href="/">Students</a>
+        </Item>
+        <Item bgColor="black">
+          <Icon>
+            <i className="fas fa-info" />
+          </Icon>
+          <a href="/submission">Submission</a>
+        </Item>
+        <Item bgColor="black">
+          <Icon>
+            <i className="fas fa-sitemap" />
+          </Icon>
+          <a href="/attendance">Attendance</a>
+        </Item>
+        <Item bgColor="black">
+          <Icon>
+            <i className="far fa-address-book" />
+          </Icon>
+          <a href="/admincontroller">Admin Controller</a>
+        </Item>
+      </Sidebar>
+      <div></div>
+      <Card className="container mr-5 pr-5 pl-5 mt-5 pt-2 bg-light">
         <Router>
           <Switch>
             <Route exact path="/">
@@ -73,10 +75,10 @@ function App() {
             <Route path="/admincontroller">kjn</Route>
           </Switch>
         </Router>
-      </header>
-    </div>
+      </Card>
+    </WrapApp>
   );
-}
+};
 const mapStateToProps = (state) => ({
   result: state.result,
 });
