@@ -6,16 +6,11 @@ import { connect } from "react-redux";
 import { Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 
-//   return (
-//     <div className="App">
+import { Row, Col, Container, Button } from "react-bootstrap";
 
-//       <button onClick={() => dispatch(increment(5))}>+</button>
-//       <button onClick={() => dispatch(decrement())}>-</button>
-//     </div>
-//   );
-// }
-import simpleAction from "./store/actions/simpleaction";
+import SearchAction from "./store/actions/SearchAction";
 import Search from "./components/Student_Search/Search";
+import { useEffect, useState } from "react";
 
 import {
   Sidebar,
@@ -26,9 +21,22 @@ import {
   Logo,
   LogoText,
 } from "react-sidebar-ui";
-import { WrapApp } from "./style";
+import { WrapApp, search } from "./style";
 
 const App = () => {
+  const [SearchValue, setSearchValue] = useState("");
+  const dispatch = useDispatch();
+  const searchInput = useSelector((state) => {
+    console.log(state);
+    return state.Searching.search;
+  });
+
+  console.log(searchInput);
+
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
   return (
     <WrapApp className="App-header">
       <Sidebar bgColor="black" isCollapsed={false}>
@@ -37,26 +45,25 @@ const App = () => {
           imageName="react logo"
         />
         <LogoText>LMS</LogoText>
-        <br></br>
-        <Item bgColor="black">
+        <Item bgColor="black" classes="mt-4">
           <Icon>
             <i className="fas fa-home" />
           </Icon>
           <a href="/">Students</a>
         </Item>
-        <Item bgColor="black">
+        <Item bgColor="black" classes="mt-3">
           <Icon>
             <i className="fas fa-info" />
           </Icon>
           <a href="/submission">Submission</a>
         </Item>
-        <Item bgColor="black">
+        <Item bgColor="black" classes="mt-3">
           <Icon>
             <i className="fas fa-sitemap" />
           </Icon>
           <a href="/attendance">Attendance</a>
         </Item>
-        <Item bgColor="black">
+        <Item bgColor="black" classes="mt-3">
           <Icon>
             <i className="far fa-address-book" />
           </Icon>
@@ -64,23 +71,52 @@ const App = () => {
         </Item>
       </Sidebar>
       <div></div>
-      <Card className="container mr-5 pr-5 pl-5 mt-5 pt-2 bg-light">
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Search />
-            </Route>
-            <Route path="/submission"></Route>
-            <Route path="/attendance">kjn</Route>
-            <Route path="/admincontroller">kjn</Route>
-          </Switch>
-        </Router>
-      </Card>
+      <div>
+        <div
+          style={{
+            display: "grid",
+            justifyContent: "center",
+          }}
+          className=" mt-3"
+        >
+          <Row className="justify-content-md-center">
+            <Col xs lg="2"></Col>
+            <Col md="auto">
+              <input
+                type="text"
+                placeholder="Search"
+                required
+                onChange={handleChange}
+              />
+              <button
+                className="btn btn-primary btn-circle btn-xl ml-2"
+                style={{ borderRadius: "50%" }}
+                onClick={() => dispatch(SearchAction(SearchValue))}
+              >
+                Search
+              </button>
+            </Col>
+            <Col xs lg="2"></Col>
+          </Row>
+        </div>
+        <Card className="container mr-5 pr-5 pl-5 mt-3 pt-2 bg-light">
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Search />
+              </Route>
+              <Route path="/submission"></Route>
+              <Route path="/attendance">kjn</Route>
+              <Route path="/admincontroller">kjn</Route>
+            </Switch>
+          </Router>
+        </Card>
+      </div>
     </WrapApp>
   );
 };
 const mapStateToProps = (state) => ({
-  result: state.result,
+  search: state.search,
 });
 
 export default connect(mapStateToProps)(App);

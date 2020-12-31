@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { Wrap } from "./style.js";
 import ModalEdit from "./ModalEdit";
+import { useSelector, useDispatch } from "react-redux";
 import { ListGroup, Row, Col, Spinner, Modal, Button } from "react-bootstrap";
 function Search() {
   const [show, setShow] = useState(false);
@@ -12,6 +13,11 @@ function Search() {
   const [arr, setArray2] = useState(0);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(0);
+
+  const searchInput = useSelector((state) => {
+    console.log(state);
+    return state.Searching.search;
+  });
   const [Pagination, setPagination] = useState({
     data: students.map((value, index) => ({
       id: value.id,
@@ -50,6 +56,14 @@ function Search() {
               pageCount: 0,
               currentData: [],
             });
+            setStudents(
+              json.message.data.map((value, index) => ({
+                id: value.id,
+                class_id: value.class_id,
+                section_id: value.section_id,
+                student_name: value.student_name,
+              }))
+            );
           } else alert(json.message);
           setLoading(1);
         });
@@ -57,6 +71,46 @@ function Search() {
       console.log(err);
     }
   }, [arr]);
+  useEffect(() => {
+    if (searchInput != "") {
+      try {
+        if (
+          students.filter((item) => {
+            return String(item.student_name).includes(String(searchInput));
+          }).length > 0
+        ) {
+          setPagination({
+            data: students
+              .filter((item) => {
+                return String(item.student_name).includes(String(searchInput));
+                //||
+                // String(item.description).includes(String(searchInput))
+              })
+              .map((value, index) => ({
+                id: value.id,
+                class_id: value.class_id,
+                section_id: value.section_id,
+                student_name: value.student_name,
+              })),
+            offset: 0,
+            numberPerPage: 4,
+            pageCount: 0,
+            currentData: [Pagination.data],
+          });
+        } else {
+          setPagination({
+            data: students,
+            offset: 0,
+            numberPerPage: 4,
+            pageCount: 0,
+            currentData: [Pagination.data],
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [searchInput]);
 
   useEffect(() => {
     setPagination((prevState) => ({
