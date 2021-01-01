@@ -2,10 +2,10 @@ import React, { useEffect, useState, Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { Wrap } from "./style.js";
-import ModalEdit from "./ModalEdit";
 
-import AddModal from "./AddModal";
 import { useSelector, useDispatch } from "react-redux";
+import EditID from "../../store/actions/EditID";
+
 import {
   ListGroup,
   Row,
@@ -14,16 +14,29 @@ import {
   Modal,
   Button,
   Form,
+  Image,
+  Table,
 } from "react-bootstrap";
+
+let ModalEdit = () => <></>;
+let AddModal = () => <></>;
+
 function Search() {
-  const [show, setShow] = useState(false);
-  const [show2, setShow2] = useState(false);
+  async function toggleModalForm(e, _id) {
+    ModalEdit = await lazy(() => import("./ModalEdit"));
 
-  const handleClose = () => setShow(false);
-  const handleClose2 = () => setShow2(false);
+    setOpenForm(!OpenForm);
+  }
+  async function toggleModalForm2(e) {
+    AddModal = await lazy(() => import("./AddModal"));
+    setOpenForm2(!OpenForm2);
+  }
 
-  const handleShow = () => setShow(true);
-  const handleShow2 = () => setShow2(true);
+  const [OpenForm, setOpenForm] = useState(false);
+  const [OpenForm2, setOpenForm2] = useState(false);
+
+  const handleClose = () => setOpenForm(!OpenForm);
+  const handleClose2 = () => setOpenForm2(!OpenForm2);
 
   const [id, setId] = useState("falsee");
   const [arr, setArray2] = useState(0);
@@ -34,24 +47,30 @@ function Search() {
   const [classes, Setclasses] = useState([]);
 
   const [Filter, setFilter] = useState([]);
+  const dispatch = useDispatch();
 
   const searchInput = useSelector((state) => {
     return state.Searching.search;
   });
+  const ID = useSelector((state) => {
+    return state.EditID.ID;
+  });
+
   const [Pagination, setPagination] = useState({
     data: students.map((value, index) => ({
       id: value.id,
       class_id: value.class_id,
       section_name: value.section_name,
       section_id: value.section_id,
+      picture: value.picture,
       student_name: value.student_name,
     })),
     offset: 0,
-    numberPerPage: 1,
+    numberPerPage: 2,
     pageCount: 0,
     currentData: [],
   });
-
+  useEffect(() => {}, [id]);
   useEffect(() => {
     fetch(`http://localhost:8000/api/Fetch_Sections`, {
       method: "post",
@@ -97,11 +116,12 @@ function Search() {
                 class_id: value.class_id,
                 section_name: value.section_name,
                 class_name: value.class_name,
+                picture: value.picture,
                 section_id: value.section_id,
                 student_name: value.student_name,
               })),
               offset: 0,
-              numberPerPage: 1,
+              numberPerPage: 2,
               pageCount: 0,
               currentData: [],
             });
@@ -111,6 +131,7 @@ function Search() {
                 class_id: value.class_id,
                 section_name: value.section_name,
                 class_name: value.class_name,
+                picture: value.picture,
                 section_id: value.section_id,
                 student_name: value.student_name,
               }))
@@ -143,10 +164,11 @@ function Search() {
                 section_name: value.section_name,
                 class_name: value.class_name,
                 section_id: value.section_id,
+                picture: value.picture,
                 student_name: value.student_name,
               })),
             offset: 0,
-            numberPerPage: 1,
+            numberPerPage: 2,
             pageCount: 0,
             currentData: [Pagination.data],
           });
@@ -154,7 +176,7 @@ function Search() {
           setPagination({
             data: students,
             offset: 0,
-            numberPerPage: 1,
+            numberPerPage: 2,
             pageCount: 0,
             currentData: [Pagination.data],
           });
@@ -182,11 +204,12 @@ function Search() {
               class_id: value.class_id,
               section_name: value.section_name,
               class_name: value.class_name,
+              picture: value.picture,
               section_id: value.section_id,
               student_name: value.student_name,
             })),
           offset: 0,
-          numberPerPage: 1,
+          numberPerPage: 2,
           pageCount: 0,
           currentData: [Pagination.data],
         });
@@ -252,7 +275,7 @@ function Search() {
               setPagination({
                 data: newList,
                 offset: 0,
-                numberPerPage: 1,
+                numberPerPage: 2,
                 pageCount: 0,
                 currentData: [],
               });
@@ -318,7 +341,7 @@ function Search() {
               <button
                 className="btn btn-primary btn-circle btn-xl"
                 style={{ borderRadius: "45%" }}
-                onClick={handleShow2}
+                onClick={toggleModalForm2}
               >
                 Add
               </button>
@@ -331,7 +354,7 @@ function Search() {
           </Row>
 
           <AddModal
-            show={show2}
+            show={OpenForm2}
             handleClose={handleClose2}
             arr={arr}
             setArray2={setArray2}
@@ -377,40 +400,56 @@ function Search() {
               <button
                 className="btn btn-primary btn-circle btn-xl"
                 style={{ borderRadius: "45%" }}
-                onClick={handleShow2}
+                onClick={toggleModalForm2}
               >
                 Add
               </button>
             </Col>
           </Row>
 
-          <ListGroup.Item>
+          <Table responsive="sm">
+            <thead>
+              <tr>
+                <th>Picture</th>
+                <th>Student Name</th>
+                <th>Class</th>
+                <th>Section</th>
+                <th colSpan="2" className="text-center">
+                  Modify
+                </th>
+              </tr>
+            </thead>
             {Pagination.currentData &&
               Pagination.currentData.map((item, index) => (
-                <Row key={item.id}>
-                  <Col sm={3}>
-                    <b>Student Name: </b>
-                    {item.student_name}
-                  </Col>{" "}
-                  <Col sm>
-                    <b>Class:</b> {item.class_name + "(" + item.class_id + ")"}
-                  </Col>
-                  <Col sm>
-                    <b>Section:</b>{" "}
-                    {item.section_name + "(" + item.section_id + ")"}
-                  </Col>
-                  <Col sm>
+                <tr key={item.id}>
+                  <td sm={3}>
+                    <Image
+                      width={100}
+                      height={100}
+                      src={"http://localhost:8000/" + item.picture}
+                      rounded
+                    />
+                  </td>{" "}
+                  <td sm={3}>{item.student_name}</td>{" "}
+                  <td sm>{item.class_name + "(" + item.class_id + ")"}</td>
+                  <td sm>{item.section_name + "(" + item.section_id + ")"}</td>
+                  <td sm>
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-info"
                       onClick={() => {
-                        setId(item.id);
-                        handleShow();
+                        dispatch(EditID(item.id));
+                        toggleModalForm();
                       }}
+
+                      // onClick={async () => {
+                      //    handleShow(item.id);
+                      //    setId(item.id);
+                      // }}
                     >
                       Edit
                     </button>
-                  </Col>
-                  <Col sm>
+                  </td>
+                  <td sm>
                     <button
                       className="btn btn-danger"
                       onClick={() => {
@@ -420,10 +459,10 @@ function Search() {
                     >
                       Delete
                     </button>
-                  </Col>
-                </Row>
+                  </td>
+                </tr>
               ))}
-          </ListGroup.Item>
+          </Table>
           <ReactPaginate
             previousLabel={" ← Previous"}
             nextLabel={"Next → "}
@@ -435,19 +474,22 @@ function Search() {
             activeClassName={"active"}
             forcePage={currentPage}
           />
-          <ModalEdit
-            show={show}
-            handleClose={handleClose}
-            id={id}
-            arr={arr}
-            setArray2={setArray2}
-          />
-          <AddModal
-            show={show2}
-            handleClose={handleClose2}
-            arr={arr}
-            setArray2={setArray2}
-          />
+          <Suspense fallback={null}>
+            <ModalEdit
+              show={OpenForm}
+              handleClose={handleClose}
+              id={ID}
+              arr={arr}
+              setArray2={setArray2}
+            />
+
+            <AddModal
+              show={OpenForm2}
+              handleClose={handleClose2}
+              arr={arr}
+              setArray2={setArray2}
+            />
+          </Suspense>
         </Wrap>
       );
   }

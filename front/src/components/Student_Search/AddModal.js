@@ -7,7 +7,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
 
   function handleInputChange(e) {
     const { value, name } = e.target;
-    if (name == "Image") {
+    if (name == "picture") {
       SetStudent_info({
         ...student_info,
         [name]: e.target.files[0],
@@ -27,16 +27,20 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
     }
   }
   function submit(e) {
+    const body = new FormData();
+
+    body.append("picture", student_info.picture);
+    body.append("phone_number", student_info.phone_number);
+    body.append("last_name", student_info.last_name);
+    body.append("first_name", student_info.first_name);
+    body.append("email", student_info.email);
+    body.append("section_name", student_info.section_name);
+
+    console.log(body);
     fetch(`http://localhost:8000/api/Add_Student`, {
       method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        student_info: student_info,
-        email: student_info.email,
-      }),
+
+      body: body,
     })
       .then((res) => res.json())
       .then((json) => {
@@ -77,7 +81,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className="ModalStyle">
+        <Form className="ModalStyle" encType="multipart/form-data">
           <Form.Group controlId="formBasicfirstname">
             <Form.Label>First Name</Form.Label>
             <Form.Control
@@ -135,9 +139,13 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
               ))}
             </Form.Control>
           </Form.Group>
-          {/* <Form.Group controlId="formBasicCheckbox">
-            <Form.File type="file" name="Image" onChange={handleInputChange} />
-          </Form.Group> */}
+          <Form.Group controlId="formBasicCheckbox">
+            <Form.File
+              type="file"
+              name="picture"
+              onChange={handleInputChange}
+            />
+          </Form.Group>
           <Button variant="primary" type="submit" onClick={submit}>
             Submit
           </Button>

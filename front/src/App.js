@@ -116,6 +116,7 @@ const App = () => {
 };
 const mapStateToProps = (state) => ({
   search: state.search,
+  ID: state.ID,
 });
 
 export default connect(mapStateToProps)(App);
