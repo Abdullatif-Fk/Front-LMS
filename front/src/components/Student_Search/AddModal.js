@@ -61,11 +61,10 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message.length == 0)
-            SetStudent_info({
-              ...student_info,
-              ["section_name"]: json.message[0].section_name,
-            });
+          SetStudent_info({
+            ...student_info,
+            ["section_name"]: json.message[0].section_name,
+          });
           SetSections(json.message);
         });
     } catch (err) {

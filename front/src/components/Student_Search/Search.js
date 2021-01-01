@@ -6,7 +6,15 @@ import ModalEdit from "./ModalEdit";
 
 import AddModal from "./AddModal";
 import { useSelector, useDispatch } from "react-redux";
-import { ListGroup, Row, Col, Spinner, Modal, Button } from "react-bootstrap";
+import {
+  ListGroup,
+  Row,
+  Col,
+  Spinner,
+  Modal,
+  Button,
+  Form,
+} from "react-bootstrap";
 function Search() {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
@@ -22,6 +30,10 @@ function Search() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [sections, SetSections] = useState([]);
+  const [classes, Setclasses] = useState([]);
+
+  const [Filter, setFilter] = useState([]);
 
   const searchInput = useSelector((state) => {
     return state.Searching.search;
@@ -40,6 +52,31 @@ function Search() {
     currentData: [],
   });
 
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/Fetch_Sections`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        SetSections(json.message);
+      });
+
+    fetch(`http://localhost:8000/api/Fetch_Classes`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        Setclasses(json.message);
+      });
+  }, []);
   useEffect(() => {
     try {
       fetch("http://localhost:8000/api/Fetch_Students", {
@@ -129,6 +166,37 @@ function Search() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (Filter != []) {
+      try {
+        console.log(Filter);
+        setPagination({
+          data: students
+            .filter((item) => {
+              return (
+                String(item.section_name) == String(Filter["section_name"]) ||
+                String(item.class_name) == String(Filter["class_name"])
+              );
+            })
+            .map((value, index) => ({
+              id: value.id,
+              class_id: value.class_id,
+              section_name: value.section_name,
+              class_name: value.class_name,
+              section_id: value.section_id,
+              student_name: value.student_name,
+            })),
+          offset: 0,
+          numberPerPage: 1,
+          pageCount: 0,
+          currentData: [Pagination.data],
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [Filter]);
+
+  useEffect(() => {
     setPagination((prevState) => ({
       ...prevState,
       pageCount: prevState.data.length / prevState.numberPerPage,
@@ -145,6 +213,20 @@ function Search() {
     setCurrentPage(selected);
     setPagination({ ...Pagination, offset });
   };
+  function handleInputChange(e) {
+    const { value, name } = e.target;
+    console.log(11);
+    // if (name == "section_name") {
+    //   var newValue = value.split("(");
+    //   SetStudent_info({
+    //     ...student_info,
+    //     [name]: newValue[0].trim(),
+    //   });
+
+    setFilter({
+      [name]: value,
+    });
+  }
 
   const del = (id) => {
     try {
@@ -201,7 +283,37 @@ function Search() {
       return (
         <Wrap>
           <Row>
-            <Col sm={9}></Col>
+            <Col sm={4}>
+              {" "}
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Section</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="section_name"
+                  onChange={handleInputChange}
+                >
+                  {sections.map((o) => (
+                    <option key={o.section_name}>{o.section_name}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+            <Col sm={4}>
+              {" "}
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="class_name"
+                  onChange={handleInputChange}
+                >
+                  {classes.map((o) => (
+                    <option key={o.class_name}>{o.class_name}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+
             <Col className="left mb-2">
               <button
                 className="btn btn-primary btn-circle btn-xl"
@@ -212,16 +324,12 @@ function Search() {
               </button>
             </Col>
           </Row>
-          <div style={{ position: "absolute", left: "50%" }}>
-            <div
-              style={{
-                position: "relative",
-                left: "-50%",
-              }}
-            >
-              Couldn't find any student...
-            </div>
-          </div>
+          <Row>
+            <Col sm={5}></Col>
+            <Col sm={2}>No Students</Col>
+            <Col sm={5}></Col>
+          </Row>
+
           <AddModal
             show={show2}
             handleClose={handleClose2}
@@ -234,7 +342,37 @@ function Search() {
       return (
         <Wrap>
           <Row>
-            <Col sm={9}></Col>
+            <Col sm={1}></Col>
+            <Col sm={4}>
+              {" "}
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Section</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="section_name"
+                  onChange={handleInputChange}
+                >
+                  {sections.map((o) => (
+                    <option key={o.section_name}>{o.section_name}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+            <Col sm={4}>
+              {" "}
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="class_name"
+                  onChange={handleInputChange}
+                >
+                  {classes.map((o) => (
+                    <option key={o.class_name}>{o.class_name}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Col>
             <Col className="left mb-2">
               <button
                 className="btn btn-primary btn-circle btn-xl"
