@@ -1,6 +1,10 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import "./ModalStyle.scss";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function AddModal({ show, handleClose, arr, setArray2 }) {
   const [student_info, SetStudent_info] = useState([]);
   const [sections, SetSections] = useState([]);
@@ -46,9 +50,25 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
       .then((json) => {
         console.log(json.message);
         if (json.status == 400) {
-          alert(json.message);
+          toast.error(json.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         } else {
-          alert(json.message);
+          toast.info(json.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           setArray2(arr + 1);
           handleClose();
         }

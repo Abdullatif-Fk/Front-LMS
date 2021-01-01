@@ -1,6 +1,9 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import "./ModalStyle.scss";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   const [student_info, SetStudent_info] = useState([]);
   const [sections, SetSections] = useState([]);
@@ -26,6 +29,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
         });
     }
   }
+
   function submit(e) {
     const body = new FormData();
     console.log(student_info);
@@ -45,9 +49,26 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
       .then((json) => {
         console.log(json.message);
         if (json.status == 400) {
-          alert(json.message);
+          toast.error(json.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         } else {
           setArray2(arr + 1);
+          toast.info(json.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           handleClose();
         }
       });
@@ -86,6 +107,17 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   }, [show]);
   return (
     <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Modal.Header closeButton>
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>

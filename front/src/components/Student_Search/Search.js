@@ -5,6 +5,8 @@ import { Wrap } from "./style.js";
 
 import { useSelector, useDispatch } from "react-redux";
 import EditID from "../../store/actions/EditID";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   ListGroup,
@@ -136,7 +138,17 @@ function Search() {
                 student_name: value.student_name,
               }))
             );
-          } else alert(json.message);
+          } else
+            toast.error(json.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+
           setLoading(1);
         });
     } catch (err) {
@@ -172,6 +184,7 @@ function Search() {
             pageCount: 0,
             currentData: [Pagination.data],
           });
+          setCurrentPage(0);
         } else {
           setPagination({
             data: students,
@@ -190,7 +203,6 @@ function Search() {
   useEffect(() => {
     if (Filter != []) {
       try {
-        console.log(Filter);
         setPagination({
           data: students
             .filter((item) => {
@@ -213,6 +225,7 @@ function Search() {
           pageCount: 0,
           currentData: [Pagination.data],
         });
+        setCurrentPage(0);
       } catch (err) {
         console.log(err);
       }
@@ -263,8 +276,15 @@ function Search() {
         })
           .then((res) => res.json())
           .then((json) => {
-            console.log(json);
-            alert(json.message);
+            toast.info(json.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
             if (json.status == 400) {
               // if (json.redirect == true) {
               //   window.location.replace(json.location);
@@ -364,6 +384,17 @@ function Search() {
     else
       return (
         <Wrap>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Row>
             <Col sm={1}></Col>
             <Col sm={4}>
