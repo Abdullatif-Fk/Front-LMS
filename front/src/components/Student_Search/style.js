@@ -21,4 +21,10 @@ export const Wrap = styled(ListGroup)`
 
     cursor: pointer;
   }
+  .row:nth-child(even) {
+    background: #dcdcdc;
+  }
+  .row div {
+    padding: 10px;
+  }
 `;

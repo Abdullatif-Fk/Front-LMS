@@ -27,7 +27,6 @@ const App = () => {
   const [SearchValue, setSearchValue] = useState("");
   const dispatch = useDispatch();
   const searchInput = useSelector((state) => {
-    console.log(state);
     return state.Searching.search;
   });
 
