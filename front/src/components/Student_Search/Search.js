@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
-import { Wrap } from "./style.js";
+import { Wrap, TableBody } from "./style.js";
 
 import { useSelector, useDispatch } from "react-redux";
 import EditID from "../../store/actions/EditID";
@@ -40,7 +40,7 @@ function Search() {
   const handleClose = () => setOpenForm(!OpenForm);
   const handleClose2 = () => setOpenForm2(!OpenForm2);
 
-  const [id, setId] = useState("falsee");
+  //const [id, setId] = useState("falsee");
   const [arr, setArray2] = useState(0);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(0);
@@ -50,6 +50,21 @@ function Search() {
 
   const [Filter, setFilter] = useState([]);
   const dispatch = useDispatch();
+
+  const [showDelete, setShowDelete] = useState(false);
+  const [idDelete, setidDelete] = useState(false);
+
+  const handleCloseDelete = () => setShowDelete(false);
+  const handleShowDelete = (id) => {
+    Promise.resolve()
+      .then(() => {
+        setidDelete(id);
+      })
+      .then(() => {
+        console.log(idDelete);
+        setShowDelete(true);
+      });
+  };
 
   const searchInput = useSelector((state) => {
     return state.Searching.search;
@@ -72,7 +87,6 @@ function Search() {
     pageCount: 0,
     currentData: [],
   });
-  useEffect(() => {}, [id]);
   useEffect(() => {
     fetch(`http://localhost:8000/api/Fetch_Sections`, {
       method: "post",
@@ -266,41 +280,40 @@ function Search() {
 
   const del = (id) => {
     try {
-      if (window.confirm("Delete the item?"))
-        fetch(`http://localhost:8000/api/Delete_Student/${id}`, {
-          method: "delete",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        })
-          .then((res) => res.json())
-          .then((json) => {
-            toast.info(json.message, {
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-            if (json.status == 400) {
-              // if (json.redirect == true) {
-              //   window.location.replace(json.location);
-              // }
-            } else {
-              const newList = Pagination.data.filter((item) => item.id !== id);
-
-              setPagination({
-                data: newList,
-                offset: 0,
-                numberPerPage: 2,
-                pageCount: 0,
-                currentData: [],
-              });
-            }
+      fetch(`http://localhost:8000/api/Delete_Student/${id}`, {
+        method: "delete",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          toast.info(json.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
           });
+          if (json.status == 400) {
+            // if (json.redirect == true) {
+            //   window.location.replace(json.location);
+            // }
+          } else {
+            const newList = Pagination.data.filter((item) => item.id !== id);
+
+            setPagination({
+              data: newList,
+              offset: 0,
+              numberPerPage: 2,
+              pageCount: 0,
+              currentData: [],
+            });
+          }
+        });
     } catch (err) {
       console.log(err);
     }
@@ -438,8 +451,8 @@ function Search() {
             </Col>
           </Row>
 
-          <Table responsive="sm">
-            <thead>
+          <Table responsive="sm" className="mt-2">
+            <thead style={{ background: "#C0C0C0" }}>
               <tr>
                 <th>Picture</th>
                 <th>Student Name</th>
@@ -450,49 +463,54 @@ function Search() {
                 </th>
               </tr>
             </thead>
-            {Pagination.currentData &&
-              Pagination.currentData.map((item, index) => (
-                <tr key={item.id}>
-                  <td sm={3}>
-                    <Image
-                      width={100}
-                      height={100}
-                      src={"http://localhost:8000/" + item.picture}
-                      rounded
-                    />
-                  </td>{" "}
-                  <td sm={3}>{item.student_name}</td>{" "}
-                  <td sm>{item.class_name + "(" + item.class_id + ")"}</td>
-                  <td sm>{item.section_name + "(" + item.section_id + ")"}</td>
-                  <td sm>
-                    <button
-                      className="btn btn-info"
-                      onClick={() => {
-                        dispatch(EditID(item.id));
-                        toggleModalForm();
-                      }}
+            <TableBody>
+              {Pagination.currentData &&
+                Pagination.currentData.map((item, index) => (
+                  <tr key={item.id}>
+                    <td sm={3}>
+                      <Image
+                        width={100}
+                        height={100}
+                        src={"http://localhost:8000/" + item.picture}
+                        rounded
+                      />
+                    </td>{" "}
+                    <td sm={3}>{item.student_name}</td>{" "}
+                    <td sm>{item.class_name + "(" + item.class_id + ")"}</td>
+                    <td sm>
+                      {item.section_name + "(" + item.section_id + ")"}
+                    </td>
+                    <td sm>
+                      <button
+                        className="btn btn-info"
+                        onClick={() => {
+                          dispatch(EditID(item.id));
+                          toggleModalForm();
+                        }}
 
-                      // onClick={async () => {
-                      //    handleShow(item.id);
-                      //    setId(item.id);
-                      // }}
-                    >
-                      Edit
-                    </button>
-                  </td>
-                  <td sm>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => {
-                        del(item.id);
-                        setCurrentPage(0);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                        // onClick={async () => {
+                        //    handleShow(item.id);
+                        //    setId(item.id);
+                        // }}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                    <td sm>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                          handleShowDelete(item.id);
+                          // del(item.id);
+                          // setCurrentPage(0);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </TableBody>
           </Table>
           <ReactPaginate
             previousLabel={" ← Previous"}
@@ -520,6 +538,30 @@ function Search() {
               arr={arr}
               setArray2={setArray2}
             />
+            <Modal show={showDelete} onHide={handleCloseDelete}>
+              <Modal.Header closeButton>
+                <Modal.Title>Delete Item</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Are you sure you want to delete this item?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    console.log(idDelete);
+                    handleCloseDelete();
+                    del(idDelete);
+                    setCurrentPage(0);
+                  }}
+                >
+                  Delete
+                </Button>
+                <Button variant="primary" onClick={handleCloseDelete}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Suspense>
         </Wrap>
       );

@@ -28,3 +28,8 @@ export const Wrap = styled(ListGroup)`
     padding: 10px;
   }
 `;
+export const TableBody = styled.tbody`
+  tr:nth-child(even) {
+    background: #e8e8e8;
+  }
+`;
