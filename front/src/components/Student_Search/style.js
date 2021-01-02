@@ -21,4 +21,15 @@ export const Wrap = styled(ListGroup)`
 
     cursor: pointer;
   }
+  .row:nth-child(even) {
+    background: #dcdcdc;
+  }
+  .row div {
+    padding: 10px;
+  }
+`;
+export const TableBody = styled.tbody`
+  tr:nth-child(even) {
+    background: #e8e8e8;
+  }
 `;
