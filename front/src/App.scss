@@ -1,8 +1,38 @@
 @import "~bootstrap/scss/bootstrap";
 $color-gray-one: #666666;
-.App-header
+.SideBar
 {
-  display: grid;
-  grid-template-columns: 20% 80%;
+  background-image: linear-gradient(to bottom right, black, white);
+
+}
+@media only screen and (min-width:700px)
+{
+.lg-hide
+{
+  display:none;
+}
+
+
+}
+
+@media only screen and (max-width:700px)
+{
+.sm-hide
+{
+  display:none;
+}
+nav#sidebar
+{
+  position: absolute;
+  height: 100vh;
+  z-index: 2;
+  opacity: 85%;
+  width:10px !important
+}
+div.mt-3
+{
+  margin: 50px auto;
+}
+
 }
 

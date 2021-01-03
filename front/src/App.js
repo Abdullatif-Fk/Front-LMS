@@ -21,11 +21,13 @@ import {
   Logo,
   LogoText,
 } from "react-sidebar-ui";
-import { WrapApp, search } from "./style";
+import { WrapApp, ForSide } from "./style";
 
 const App = () => {
   const [SearchValue, setSearchValue] = useState("");
   const dispatch = useDispatch();
+  const [SideBarClass, setSideBarClass] = useState("");
+
   const searchInput = useSelector((state) => {
     return state.Searching.search;
   });
@@ -37,40 +39,60 @@ const App = () => {
   };
 
   return (
-    <WrapApp className="App-header">
-      <Sidebar bgColor="black" isCollapsed={false}>
-        <Logo
-          image="https://media2.giphy.com/media/eNAsjO55tPbgaor7ma/source.gif"
-          imageName="react logo"
-        />
-        <LogoText>LMS</LogoText>
-        <Item bgColor="black" classes="mt-4">
-          <Icon>
-            <i className="fas fa-home" />
-          </Icon>
-          <a href="/">Students</a>
-        </Item>
-        <Item bgColor="black" classes="mt-3">
-          <Icon>
-            <i className="fas fa-info" />
-          </Icon>
-          <a href="/submission">Submission</a>
-        </Item>
-        <Item bgColor="black" classes="mt-3">
-          <Icon>
-            <i className="fas fa-sitemap" />
-          </Icon>
-          <a href="/attendance">Attendance</a>
-        </Item>
-        <Item bgColor="black" classes="mt-3">
-          <Icon>
-            <i className="far fa-address-book" />
-          </Icon>
-          <a href="/admincontroller">Admin Controller</a>
-        </Item>
-      </Sidebar>
-      <div></div>
-      <div>
+    <div class="wrapper d-flex align-items-stretch">
+      <nav id="sidebar" className={SideBarClass}>
+        <h2 className="text-center mt-3">LMS</h2>
+        <div class="p-4 pt-2">
+          <ul class="list-unstyled components mb-5">
+            <li class="active">
+              <a href="/">Search</a>
+            </li>
+
+            <li>
+              <a href="/submission">Submission</a>
+            </li>
+            <li>
+              <a href="/attendance">Attendance</a>
+            </li>
+          </ul>
+
+          <div class="footer">Copyright &copy; All rights reserved</div>
+        </div>
+      </nav>
+
+      <div id="content" class="p-4 p-md-5">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <ForSide SideBarClass={SideBarClass}>
+            <button
+              type="button"
+              id="sidebarCollapse"
+              class="btn btn-primary"
+              onClick={() => {
+                if (SideBarClass == "") setSideBarClass("active");
+                else setSideBarClass("");
+              }}
+            >
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+          </ForSide>
+          <Col md="auto" className="sm-hide">
+            <input
+              type="text"
+              placeholder="Search"
+              required
+              onChange={handleChange}
+            />
+            <button
+              className="btn btn-primary btn-circle btn-xl ml-2"
+              style={{ borderRadius: "50%" }}
+              onClick={() => dispatch(SearchAction(SearchValue))}
+            >
+              Search
+            </button>
+          </Col>
+          <Col lg="2" className="lg-hide"></Col>
+        </nav>
         <div
           style={{
             display: "grid",
@@ -78,8 +100,7 @@ const App = () => {
           }}
           className=" mt-3"
         >
-          <Row className="justify-content-md-center">
-            <Col xs lg="2"></Col>
+          <Row className="justify-content-md-center lg-hide text-center">
             <Col md="auto">
               <input
                 type="text"
@@ -95,23 +116,21 @@ const App = () => {
                 Search
               </button>
             </Col>
-            <Col xs lg="2"></Col>
           </Row>
         </div>
-        <Card className="container mr-5 pr-5 pl-5 mt-3 pt-2 bg-light">
-          <Router>
-            <Switch>
-              <Route exact path="/">
-                <Search />
-              </Route>
-              <Route path="/submission"></Route>
-              <Route path="/attendance">kjn</Route>
-              <Route path="/admincontroller">kjn</Route>
-            </Switch>
-          </Router>
-        </Card>
+
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Search />
+            </Route>
+            <Route path="/submission"></Route>
+            <Route path="/attendance">kjn</Route>
+            <Route path="/admincontroller">kjn</Route>
+          </Switch>
+        </Router>
       </div>
-    </WrapApp>
+    </div>
   );
 };
 const mapStateToProps = (state) => ({

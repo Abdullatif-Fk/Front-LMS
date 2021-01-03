@@ -32,4 +32,12 @@ export const TableBody = styled.tbody`
   tr:nth-child(even) {
     background: #e8e8e8;
   }
+
+  tr td button {
+    margin-bottom: 5px;
+  }
+  img {
+    width: 50px;
+    height: 50px;
+  }
 `;

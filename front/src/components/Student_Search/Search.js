@@ -440,13 +440,12 @@ function Search() {
                 </Form.Control>
               </Form.Group>
             </Col>
-            <Col className="left mb-2">
+            <Col className="left mb-2 text-center m-auto">
               <button
                 className="btn btn-primary btn-circle btn-xl"
-                style={{ borderRadius: "45%" }}
                 onClick={toggleModalForm2}
               >
-                Add
+                Add New Student
               </button>
             </Col>
           </Row>
@@ -467,7 +466,7 @@ function Search() {
               {Pagination.currentData &&
                 Pagination.currentData.map((item, index) => (
                   <tr key={item.id}>
-                    <td sm={3}>
+                    <td>
                       <Image
                         width={100}
                         height={100}
@@ -475,14 +474,12 @@ function Search() {
                         rounded
                       />
                     </td>{" "}
-                    <td sm={3}>{item.student_name}</td>{" "}
-                    <td sm>{item.class_name + "(" + item.class_id + ")"}</td>
-                    <td sm>
-                      {item.section_name + "(" + item.section_id + ")"}
-                    </td>
-                    <td sm>
+                    <td>{item.student_name}</td>{" "}
+                    <td>{item.class_name + "(" + item.class_id + ")"}</td>
+                    <td>{item.section_name + "(" + item.section_id + ")"}</td>
+                    <td className="text-center">
                       <button
-                        className="btn btn-info"
+                        className="btn btn-info mr-3"
                         onClick={() => {
                           dispatch(EditID(item.id));
                           toggleModalForm();
@@ -495,8 +492,7 @@ function Search() {
                       >
                         Edit
                       </button>
-                    </td>
-                    <td sm>
+
                       <button
                         className="btn btn-danger"
                         onClick={() => {
