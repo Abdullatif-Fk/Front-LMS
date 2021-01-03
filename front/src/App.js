@@ -10,6 +10,8 @@ import { Row, Col, Container, Button } from "react-bootstrap";
 
 import SearchAction from "./store/actions/SearchAction";
 import Search from "./components/Student_Search/Search";
+import Classes from "./components/Classes/index";
+
 import { useEffect, useState } from "react";
 
 import {
@@ -26,7 +28,7 @@ import { WrapApp, ForSide } from "./style";
 const App = () => {
   const [SearchValue, setSearchValue] = useState("");
   const dispatch = useDispatch();
-  const [SideBarClass, setSideBarClass] = useState("");
+  const [sidebarclass, setSideBarClass] = useState("");
 
   const searchInput = useSelector((state) => {
     return state.Searching.search;
@@ -39,12 +41,12 @@ const App = () => {
   };
 
   return (
-    <div class="wrapper d-flex align-items-stretch">
-      <nav id="sidebar" className={SideBarClass}>
+    <div className="wrapper d-flex align-items-stretch">
+      <nav id="sidebar" className={sidebarclass}>
         <h2 className="text-center mt-3">LMS</h2>
-        <div class="p-4 pt-2">
-          <ul class="list-unstyled components mb-5">
-            <li class="active">
+        <div className="p-4 pt-2">
+          <ul className="list-unstyled components mb-5">
+            <li className="active">
               <a href="/">Search</a>
             </li>
 
@@ -52,28 +54,31 @@ const App = () => {
               <a href="/submission">Submission</a>
             </li>
             <li>
+              <a href="/classes">Classes</a>
+            </li>
+            <li>
               <a href="/attendance">Attendance</a>
             </li>
           </ul>
 
-          <div class="footer">Copyright &copy; All rights reserved</div>
+          <div className="footer">Copyright &copy; All rights reserved</div>
         </div>
       </nav>
 
-      <div id="content" class="p-4 p-md-5">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <ForSide SideBarClass={SideBarClass}>
+      <div id="content" className="p-4 p-md-5">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <ForSide sidebarclass={sidebarclass}>
             <button
               type="button"
               id="sidebarCollapse"
-              class="btn btn-primary"
+              className="btn btn-primary"
               onClick={() => {
-                if (SideBarClass == "") setSideBarClass("active");
+                if (sidebarclass == "") setSideBarClass("active");
                 else setSideBarClass("");
               }}
             >
-              <i class="fa fa-bars"></i>
-              <span class="sr-only">Toggle Menu</span>
+              <i className="fa fa-bars"></i>
+              <span className="sr-only">Toggle Menu</span>
             </button>
           </ForSide>
           <Col md="auto" className="sm-hide">
@@ -126,6 +131,10 @@ const App = () => {
             </Route>
             <Route path="/submission"></Route>
             <Route path="/attendance">kjn</Route>
+            <Route path="/classes">
+              <Classes />
+            </Route>
+
             <Route path="/admincontroller">kjn</Route>
           </Switch>
         </Router>

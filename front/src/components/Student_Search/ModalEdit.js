@@ -11,6 +11,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   function handleInputChange(e) {
     const { value, name } = e.target;
     if (name == "picture") {
+      console.log(e.target.files[0]);
       SetStudent_info({
         ...student_info,
         [name]: e.target.files[0],
@@ -31,6 +32,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   }
 
   function submit(e) {
+    //const body = new URLSearchParams();
     const body = new FormData();
     console.log(student_info);
     body.append("picture", student_info.picture);
@@ -42,7 +44,6 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
     console.log(body);
     fetch(`http://localhost:8000/api/Edit_Student/${id}`, {
       method: "post",
-
       body: body,
     })
       .then((res) => res.json())
@@ -122,7 +123,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className="ModalStyle">
+        <Form className="ModalStyle" encType="multipart/form-data">
           <Form.Group controlId="formBasicfirstname">
             <Form.Label>First Name</Form.Label>
             <Form.Control
