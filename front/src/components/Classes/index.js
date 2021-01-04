@@ -4,7 +4,7 @@ import ReactPaginate from "react-paginate";
 import { Wrap, TableBody } from "../globalStyle/global.js";
 
 import { useSelector, useDispatch } from "react-redux";
-import EditID from "../../store/actions/EditID";
+import ClassID from "../../store/actions/ClassID";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,7 +23,7 @@ import {
 let ModalEdit = () => <></>;
 let AddModal = () => <></>;
 
-function Search() {
+function Index() {
   async function toggleModalForm(e, _id) {
     ModalEdit = await lazy(() => import("./ModalEdit"));
 
@@ -42,10 +42,8 @@ function Search() {
 
   //const [id, setId] = useState("falsee");
   const [arr, setArray2] = useState(0);
-  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  const [sections, SetSections] = useState([]);
   const [classes, Setclasses] = useState([]);
 
   const [Filter, setFilter] = useState([]);
@@ -70,86 +68,48 @@ function Search() {
     return state.Searching.search;
   });
   const ID = useSelector((state) => {
-    return state.EditID.ID;
+    console.log(state.SearchClass.ClassID);
+    return state.SearchClass.ClassID;
   });
 
   const [Pagination, setPagination] = useState({
-    data: students.map((value, index) => ({
-      id: value.id,
-      class_id: value.class_id,
-      section_name: value.section_name,
-      section_id: value.section_id,
-      picture: value.picture,
-      student_name: value.student_name,
+    data: classes.map((value, index) => ({
+      id: value.ID,
+      name: value.name,
     })),
     offset: 0,
     numberPerPage: 2,
     pageCount: 0,
     currentData: [],
   });
-  useEffect(() => {
-    fetch(`http://localhost:8000/api/Fetch_Sections`, {
-      method: "get",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        SetSections(json.message);
-      });
 
-    fetch(`http://localhost:8000/api/Fetch_Classes`, {
-      method: "get",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        Setclasses(json.message);
-      });
-  }, []);
   useEffect(() => {
     try {
-      fetch("http://localhost:8000/api/Fetch_Students", {
-        method: "post",
+      fetch("http://localhost:8000/api/Classes", {
+        method: "get",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
       })
         .then((res) => res.json())
         .then((json) => {
           if (json.status != 400) {
             console.log(json.message);
             setPagination({
-              data: json.message.data.map((value, index) => ({
-                id: value.id,
-                class_id: value.class_id,
-                section_name: value.section_name,
-                class_name: value.class_name,
-                picture: value.picture,
-                section_id: value.section_id,
-                student_name: value.student_name,
+              data: json.message.map((value, index) => ({
+                id: value.ID,
+                name: value.name,
               })),
               offset: 0,
               numberPerPage: 2,
               pageCount: 0,
               currentData: [],
             });
-            setStudents(
-              json.message.data.map((value, index) => ({
-                id: value.id,
-                class_id: value.class_id,
-                section_name: value.section_name,
-                class_name: value.class_name,
-                picture: value.picture,
-                section_id: value.section_id,
-                student_name: value.student_name,
+            Setclasses(
+              json.message.map((value, index) => ({
+                id: value.ID,
+                name: value.name,
               }))
             );
           } else
@@ -169,16 +129,17 @@ function Search() {
       console.log(err);
     }
   }, [arr]);
+
   useEffect(() => {
     if (searchInput != "") {
       try {
         if (
-          students.filter((item) => {
+          classes.filter((item) => {
             return String(item.student_name).includes(String(searchInput));
           }).length > 0
         ) {
           setPagination({
-            data: students
+            data: classes
               .filter((item) => {
                 return String(item.student_name).includes(String(searchInput));
                 //||
@@ -186,12 +147,7 @@ function Search() {
               })
               .map((value, index) => ({
                 id: value.id,
-                class_id: value.class_id,
-                section_name: value.section_name,
-                class_name: value.class_name,
-                section_id: value.section_id,
-                picture: value.picture,
-                student_name: value.student_name,
+                name: value.name,
               })),
             offset: 0,
             numberPerPage: 2,
@@ -201,7 +157,7 @@ function Search() {
           setCurrentPage(0);
         } else {
           setPagination({
-            data: students,
+            data: classes,
             offset: 0,
             numberPerPage: 2,
             pageCount: 0,
@@ -213,38 +169,6 @@ function Search() {
       }
     }
   }, [searchInput]);
-
-  useEffect(() => {
-    if (Filter != []) {
-      try {
-        setPagination({
-          data: students
-            .filter((item) => {
-              return (
-                String(item.section_name) == String(Filter["section_name"]) ||
-                String(item.class_name) == String(Filter["class_name"])
-              );
-            })
-            .map((value, index) => ({
-              id: value.id,
-              class_id: value.class_id,
-              section_name: value.section_name,
-              class_name: value.class_name,
-              picture: value.picture,
-              section_id: value.section_id,
-              student_name: value.student_name,
-            })),
-          offset: 0,
-          numberPerPage: 2,
-          pageCount: 0,
-          currentData: [Pagination.data],
-        });
-        setCurrentPage(0);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  }, [Filter]);
 
   useEffect(() => {
     setPagination((prevState) => ({
@@ -263,24 +187,10 @@ function Search() {
     setCurrentPage(selected);
     setPagination({ ...Pagination, offset });
   };
-  function handleInputChange(e) {
-    const { value, name } = e.target;
-    console.log(11);
-    // if (name == "section_name") {
-    //   var newValue = value.split("(");
-    //   SetStudent_info({
-    //     ...student_info,
-    //     [name]: newValue[0].trim(),
-    //   });
-
-    setFilter({
-      [name]: value,
-    });
-  }
 
   const del = (id) => {
     try {
-      fetch(`http://localhost:8000/api/Delete_Student/${id}`, {
+      fetch(`http://localhost:8000/api/Classes/${id}`, {
         method: "delete",
         headers: {
           "Content-Type": "application/json",
@@ -289,20 +199,26 @@ function Search() {
       })
         .then((res) => res.json())
         .then((json) => {
-          toast.info(json.message, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
           if (json.status == 400) {
-            // if (json.redirect == true) {
-            //   window.location.replace(json.location);
-            // }
+            toast.error(json.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           } else {
+            toast.info(json.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
             const newList = Pagination.data.filter((item) => item.id !== id);
 
             setPagination({
@@ -339,49 +255,18 @@ function Search() {
       return (
         <Wrap>
           <Row>
-            <Col sm={1}></Col>
-            <Col sm={4}>
-              {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Select Section</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="section_name"
-                  onChange={handleInputChange}
-                >
-                  {sections.map((o) => (
-                    <option key={o.section_name}>{o.section_name}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
-            <Col sm={4}>
-              {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Select Class</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="class_name"
-                  onChange={handleInputChange}
-                >
-                  {classes.map((o) => (
-                    <option key={o.class_name}>{o.class_name}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
             <Col className="left mb-2 text-center m-auto">
               <button
                 className="btn btn-primary btn-circle btn-xl"
                 onClick={toggleModalForm2}
               >
-                Add New Student
+                Add New Class
               </button>
             </Col>
           </Row>
           <Row>
             <Col sm={5}></Col>
-            <Col sm={2}>No Students</Col>
+            <Col sm={2}>No Classes</Col>
             <Col sm={5}></Col>
           </Row>
 
@@ -408,43 +293,12 @@ function Search() {
             pauseOnHover
           />
           <Row>
-            <Col sm={1}></Col>
-            <Col sm={4}>
-              {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Select Section</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="section_name"
-                  onChange={handleInputChange}
-                >
-                  {sections.map((o) => (
-                    <option key={o.section_name}>{o.section_name}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
-            <Col sm={4}>
-              {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Select Class</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="class_name"
-                  onChange={handleInputChange}
-                >
-                  {classes.map((o) => (
-                    <option key={o.class_name}>{o.class_name}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
             <Col className="left mb-2 text-center m-auto">
               <button
                 className="btn btn-primary btn-circle btn-xl"
                 onClick={toggleModalForm2}
               >
-                Add New Student
+                Add New Class
               </button>
             </Col>
           </Row>
@@ -452,10 +306,8 @@ function Search() {
           <Table responsive="sm" className="mt-2">
             <thead style={{ background: "#C0C0C0" }}>
               <tr>
-                <th>Picture</th>
-                <th>Student Name</th>
-                <th>Class</th>
-                <th>Section</th>
+                <th>ID</th>
+                <th>Name</th>
                 <th colSpan="2" className="text-center">
                   Modify
                 </th>
@@ -465,22 +317,13 @@ function Search() {
               {Pagination.currentData &&
                 Pagination.currentData.map((item, index) => (
                   <tr key={item.id}>
-                    <td>
-                      <Image
-                        width={100}
-                        height={100}
-                        src={"http://localhost:8000/" + item.picture}
-                        rounded
-                      />
-                    </td>
-                    <td>{item.student_name}</td>
-                    <td>{item.class_name + "(" + item.class_id + ")"}</td>
-                    <td>{item.section_name + "(" + item.section_id + ")"}</td>
+                    <td>{item.id}</td>
+                    <td>{item.name}</td>
                     <td className="text-center">
                       <button
                         className="btn btn-info mr-3"
                         onClick={() => {
-                          dispatch(EditID(item.id));
+                          dispatch(ClassID(item.id));
                           toggleModalForm();
                         }}
 
@@ -562,4 +405,4 @@ function Search() {
       );
   }
 }
-export default Search;
+export default Index;
