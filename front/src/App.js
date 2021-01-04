@@ -46,8 +46,8 @@ const App = () => {
         <h2 className="text-center mt-3">LMS</h2>
         <div className="p-4 pt-2">
           <ul className="list-unstyled components mb-5">
-            <li className="active">
-              <a href="/">Search</a>
+            <li>
+              <a href="/">Students</a>
             </li>
 
             <li>

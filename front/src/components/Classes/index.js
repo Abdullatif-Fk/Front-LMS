@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
-import { Wrap, TableBody } from "./style.js";
+import { Wrap, TableBody } from "../globalStyle/global.js";
 
 import { useSelector, useDispatch } from "react-redux";
 import ClassID from "../../store/actions/ClassID";
@@ -199,20 +199,26 @@ function Index() {
       })
         .then((res) => res.json())
         .then((json) => {
-          toast.info(json.message, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
           if (json.status == 400) {
-            // if (json.redirect == true) {
-            //   window.location.replace(json.location);
-            // }
+            toast.error(json.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           } else {
+            toast.info(json.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
             const newList = Pagination.data.filter((item) => item.id !== id);
 
             setPagination({

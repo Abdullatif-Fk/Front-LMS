@@ -32,6 +32,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   }
 
   function submit(e) {
+    e.preventDefault();
     //const body = new URLSearchParams();
     const body = new FormData();
     console.log(student_info);
@@ -78,7 +79,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
     try {
       if (id != "falsee") {
         fetch(`http://localhost:8000/api/Fetch_Sections`, {
-          method: "post",
+          method: "get",
           headers: {
             Accept: "application/json",
             "Content-type": "application/json",
@@ -123,11 +124,16 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className="ModalStyle" encType="multipart/form-data">
+        <Form
+          className="ModalStyle"
+          encType="multipart/form-data"
+          onSubmit={submit}
+        >
           <Form.Group controlId="formBasicfirstname">
             <Form.Label>First Name</Form.Label>
             <Form.Control
               type="text"
+              required
               placeholder="Enter your name"
               name="first_name"
               defaultValue={student_info.first_name}
@@ -139,6 +145,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             <Form.Label>Last Name</Form.Label>
             <Form.Control
               type="text"
+              required
               placeholder="Enter your last name"
               name="last_name"
               defaultValue={student_info.last_name}
@@ -150,6 +157,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
+              required
               placeholder="Enter email"
               name="email"
               defaultValue={student_info.email}
@@ -161,6 +169,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             <Form.Label>Phone nb</Form.Label>
             <Form.Control
               type="text"
+              required
               placeholder="Enter your phone"
               name="phone_number"
               defaultValue={student_info.phone_number}
@@ -169,30 +178,11 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
 
-          {/* <Form.Group controlId="formBasicsectionname">
-            <Form.Label>Class Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Class name"
-              name="section_name"
-              value={student_info.class_name}
-            />
-          </Form.Group> */}
-
-          {/* <Form.Group controlId="formBasicPassword">
-            <Form.Label>Class Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Class name"
-              name="class_name"
-              defaultValue={student_info.class_name}
-              onChange={handleInputChange}
-            />
-          </Form.Group> */}
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Select Section</Form.Label>
             <Form.Control
               as="select"
+              required
               name="section_name"
               defaultValue={student_info.section_name}
               onChange={handleInputChange}
@@ -217,10 +207,11 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             <Form.File
               type="file"
               name="picture"
+              required
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Button variant="primary" type="submit" onClick={submit}>
+          <Button variant="primary" type="submit">
             Submit
           </Button>
         </Form>
@@ -228,9 +219,6 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={submit}>
-          Submit
         </Button>
       </Modal.Footer>
     </Modal>

@@ -31,6 +31,8 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
     }
   }
   function submit(e) {
+    e.preventDefault();
+
     const body = new FormData();
 
     body.append("picture", student_info.picture);
@@ -77,7 +79,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
   useEffect(() => {
     try {
       fetch(`http://localhost:8000/api/Fetch_Sections`, {
-        method: "post",
+        method: "get",
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -97,14 +99,30 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
   }, [show]);
   return (
     <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Modal.Header closeButton>
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className="ModalStyle" encType="multipart/form-data">
+        <Form
+          className="ModalStyle"
+          encType="multipart/form-data"
+          onSubmit={submit}
+        >
           <Form.Group controlId="formBasicfirstname">
             <Form.Label>First Name</Form.Label>
             <Form.Control
+              required
               type="text"
               placeholder="Enter your name"
               name="first_name"
@@ -115,6 +133,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
           <Form.Group controlId="formBasiclastname">
             <Form.Label>Last Name</Form.Label>
             <Form.Control
+              required
               type="text"
               placeholder="Enter your last name"
               name="last_name"
@@ -135,6 +154,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Phone nb</Form.Label>
             <Form.Control
+              required
               type="text"
               placeholder="Enter your phone"
               name="phone_number"
@@ -146,6 +166,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Select Section</Form.Label>
             <Form.Control
+              required
               as="select"
               name="section_name"
               onChange={handleInputChange}
@@ -161,12 +182,13 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
           </Form.Group>
           <Form.Group controlId="formBasicCheckbox">
             <Form.File
+              required
               type="file"
               name="picture"
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Button variant="primary" type="submit" onClick={submit}>
+          <Button variant="primary" type="submit">
             Submit
           </Button>
         </Form>
@@ -174,9 +196,6 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={submit}>
-          Submit
         </Button>
       </Modal.Footer>
     </Modal>

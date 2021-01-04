@@ -17,8 +17,9 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   }
 
   function submit(e) {
+    e.preventDefault();
     fetch(`http://localhost:8000/api/Classes/${id}`, {
-      method: "post",
+      method: "put",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -58,7 +59,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
       if (id != "falsee") {
         //Fetch_Student_By_Id
         fetch(`http://localhost:8000/api/Classes/${id}`, {
-          method: "post",
+          method: "get",
           headers: {
             Accept: "application/json",
             "Content-type": "application/json",
@@ -67,7 +68,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
           .then((res) => res.json())
           .then((json) => {
             Setclass(json.message);
-            console.log(Class);
+            console.log(json.message);
           });
       }
     } catch (err) {
@@ -91,11 +92,12 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className="ModalStyle">
+        <Form className="ModalStyle" onSubmit={submit}>
           <Form.Group controlId="formBasicfirstname">
             <Form.Label>First Name</Form.Label>
             <Form.Control
               type="text"
+              required
               placeholder="Enter your name"
               name="name"
               defaultValue={Class.name}
@@ -104,7 +106,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
 
-          <Button variant="primary" type="submit" onClick={submit}>
+          <Button variant="primary" type="submit">
             Submit
           </Button>
         </Form>
@@ -112,9 +114,6 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={submit}>
-          Submit
         </Button>
       </Modal.Footer>
     </Modal>

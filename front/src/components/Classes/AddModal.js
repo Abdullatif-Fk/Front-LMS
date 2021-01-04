@@ -15,9 +15,11 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
       ...class_info,
       [name]: value,
     });
+    console.log(class_info);
   }
 
   function submit(e) {
+    e.preventDefault();
     const body = new FormData();
 
     body.append("name", class_info.name);
@@ -58,23 +60,35 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
 
   return (
     <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Modal.Header closeButton>
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className="ModalStyle" encType="multipart/form-data">
+        <Form className="ModalStyle" onSubmit={submit}>
           <Form.Group controlId="formBasicfirstname">
             <Form.Label>Class Name</Form.Label>
             <Form.Control
+              required
               type="text"
-              placeholder="Enter your name"
+              placeholder="Enter your class name"
               name="name"
               onChange={handleInputChange}
             />
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
 
-          <Button variant="primary" type="submit" onClick={submit}>
+          <Button variant="primary" type="submit">
             Submit
           </Button>
         </Form>
@@ -82,9 +96,6 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={submit}>
-          Submit
         </Button>
       </Modal.Footer>
     </Modal>

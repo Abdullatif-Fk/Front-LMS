@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
-import { Wrap, TableBody } from "./style.js";
+import { Wrap, TableBody } from "../globalStyle/global.js";
 
 import { useSelector, useDispatch } from "react-redux";
 import EditID from "../../store/actions/EditID";
@@ -89,7 +89,7 @@ function Search() {
   });
   useEffect(() => {
     fetch(`http://localhost:8000/api/Fetch_Sections`, {
-      method: "post",
+      method: "get",
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
@@ -101,7 +101,7 @@ function Search() {
       });
 
     fetch(`http://localhost:8000/api/Fetch_Classes`, {
-      method: "post",
+      method: "get",
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
