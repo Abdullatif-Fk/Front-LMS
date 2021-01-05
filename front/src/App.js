@@ -11,30 +11,16 @@ import { Row, Col, Container, Button } from "react-bootstrap";
 import SearchAction from "./store/actions/SearchAction";
 import Search from "./components/Student_Search/Search";
 import Classes from "./components/Classes/index";
+import Sections from "./components/Sections/index";
 
 import { useEffect, useState } from "react";
 
-import {
-  Sidebar,
-  InputItem,
-  DropdownItem,
-  Icon,
-  Item,
-  Logo,
-  LogoText,
-} from "react-sidebar-ui";
 import { WrapApp, ForSide } from "./style";
 
 const App = () => {
   const [SearchValue, setSearchValue] = useState("");
   const dispatch = useDispatch();
   const [sidebarclass, setSideBarClass] = useState("");
-
-  const searchInput = useSelector((state) => {
-    return state.Searching.search;
-  });
-
-  console.log(searchInput);
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
@@ -49,7 +35,9 @@ const App = () => {
             <li>
               <a href="/">Students</a>
             </li>
-
+            <li>
+              <a href="/sections">Sections</a>
+            </li>
             <li>
               <a href="/submission">Submission</a>
             </li>
@@ -133,6 +121,9 @@ const App = () => {
             <Route path="/attendance">kjn</Route>
             <Route path="/classes">
               <Classes />
+            </Route>
+            <Route path="/sections">
+              <Sections />
             </Route>
 
             <Route path="/admincontroller">kjn</Route>
