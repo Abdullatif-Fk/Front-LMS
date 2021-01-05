@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
-import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { Wrap, TableBody } from "../globalStyle/global.js";
 
@@ -9,7 +8,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
-  ListGroup,
   Row,
   Col,
   Spinner,
@@ -67,6 +65,7 @@ function Search() {
   };
 
   const searchInput = useSelector((state) => {
+    console.log(state);
     return state.Searching.search;
   });
   const ID = useSelector((state) => {
@@ -97,7 +96,7 @@ function Search() {
     })
       .then((res) => res.json())
       .then((json) => {
-        SetSections(json.message);
+        if (json.status == 200) SetSections(json.message);
       });
 
     fetch(`http://localhost:8000/api/Fetch_Classes`, {
@@ -109,7 +108,7 @@ function Search() {
     })
       .then((res) => res.json())
       .then((json) => {
-        Setclasses(json.message);
+        if (json.status == 200) Setclasses(json.message);
       });
   }, []);
   useEffect(() => {
@@ -127,7 +126,7 @@ function Search() {
           if (json.status != 400) {
             console.log(json.message);
             setPagination({
-              data: json.message.data.map((value, index) => ({
+              data: json.message.map((value, index) => ({
                 id: value.id,
                 class_id: value.class_id,
                 section_name: value.section_name,
@@ -142,7 +141,7 @@ function Search() {
               currentData: [],
             });
             setStudents(
-              json.message.data.map((value, index) => ({
+              json.message.map((value, index) => ({
                 id: value.id,
                 class_id: value.class_id,
                 section_name: value.section_name,
@@ -169,7 +168,7 @@ function Search() {
       console.log(err);
     }
   }, [arr]);
-  useEffect(() => {
+  useEffect(async () => {
     if (searchInput != "") {
       try {
         if (
@@ -177,7 +176,7 @@ function Search() {
             return String(item.student_name).includes(String(searchInput));
           }).length > 0
         ) {
-          setPagination({
+          await setPagination({
             data: students
               .filter((item) => {
                 return String(item.student_name).includes(String(searchInput));
@@ -215,7 +214,8 @@ function Search() {
   }, [searchInput]);
 
   useEffect(() => {
-    if (Filter != []) {
+    console.log(Object.keys(Filter).length);
+    if (Object.keys(Filter).length > 0) {
       try {
         setPagination({
           data: students
@@ -265,13 +265,6 @@ function Search() {
   };
   function handleInputChange(e) {
     const { value, name } = e.target;
-    console.log(11);
-    // if (name == "section_name") {
-    //   var newValue = value.split("(");
-    //   SetStudent_info({
-    //     ...student_info,
-    //     [name]: newValue[0].trim(),
-    //   });
 
     setFilter({
       [name]: value,
@@ -299,9 +292,6 @@ function Search() {
             progress: undefined,
           });
           if (json.status == 400) {
-            // if (json.redirect == true) {
-            //   window.location.replace(json.location);
-            // }
           } else {
             const newList = Pagination.data.filter((item) => item.id !== id);
 
@@ -318,8 +308,11 @@ function Search() {
       console.log(err);
     }
   };
-
-  if (loading == 0) {
+  if (
+    loading == 0 ||
+    Object.keys(classes).length < 1 ||
+    Object.keys(sections).length < 1
+  ) {
     return (
       <div style={{ position: "absolute", left: "50%" }}>
         <div
@@ -349,24 +342,36 @@ function Search() {
                   name="section_name"
                   onChange={handleInputChange}
                 >
-                  {sections.map((o) => (
-                    <option key={o.section_name}>{o.section_name}</option>
-                  ))}
+                  {sections.map((o) =>
+                    Filter["section_name"] == o.section_name ? (
+                      <option key={o.section_id} selected>
+                        {o.section_name}
+                      </option>
+                    ) : (
+                      <option key={o.section_id}>{o.section_name}</option>
+                    )
+                  )}
                 </Form.Control>
               </Form.Group>
             </Col>
             <Col sm={4}>
               {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Group controlId="exampleForm.ControlSelect2">
                 <Form.Label>Select Class</Form.Label>
                 <Form.Control
                   as="select"
                   name="class_name"
                   onChange={handleInputChange}
                 >
-                  {classes.map((o) => (
-                    <option key={o.class_name}>{o.class_name}</option>
-                  ))}
+                  {classes.map((o) =>
+                    Filter["section_name"] == o.section_name ? (
+                      <option key={o.class_name} selected>
+                        {o.class_name}
+                      </option>
+                    ) : (
+                      <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
                 </Form.Control>
               </Form.Group>
             </Col>
@@ -418,24 +423,36 @@ function Search() {
                   name="section_name"
                   onChange={handleInputChange}
                 >
-                  {sections.map((o) => (
-                    <option key={o.section_name}>{o.section_name}</option>
-                  ))}
+                  {sections.map((o) =>
+                    Filter["section_name"] == o.section_name ? (
+                      <option key={o.section_id} selected>
+                        {o.section_name}
+                      </option>
+                    ) : (
+                      <option key={o.section_id}>{o.section_name}</option>
+                    )
+                  )}
                 </Form.Control>
               </Form.Group>
             </Col>
             <Col sm={4}>
               {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Group controlId="exampleForm.ControlSelect2">
                 <Form.Label>Select Class</Form.Label>
                 <Form.Control
                   as="select"
                   name="class_name"
                   onChange={handleInputChange}
                 >
-                  {classes.map((o) => (
-                    <option key={o.class_name}>{o.class_name}</option>
-                  ))}
+                  {classes.map((o) =>
+                    Filter["section_name"] == o.section_name ? (
+                      <option key={o.class_name} selected>
+                        {o.class_name}
+                      </option>
+                    ) : (
+                      <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
                 </Form.Control>
               </Form.Group>
             </Col>
@@ -466,12 +483,14 @@ function Search() {
                 Pagination.currentData.map((item, index) => (
                   <tr key={item.id}>
                     <td>
-                      <Image
-                        width={100}
-                        height={100}
-                        src={"http://localhost:8000/" + item.picture}
-                        rounded
-                      />
+                      {item.id && (
+                        <Image
+                          width={100}
+                          height={100}
+                          src={"http://localhost:8000/" + item.picture}
+                          rounded
+                        />
+                      )}
                     </td>
                     <td>{item.student_name}</td>
                     <td>{item.class_name + "(" + item.class_id + ")"}</td>
@@ -525,6 +544,7 @@ function Search() {
               id={ID}
               arr={arr}
               setArray2={setArray2}
+              setCurrentPage={setCurrentPage}
             />
 
             <AddModal
@@ -532,6 +552,7 @@ function Search() {
               handleClose={handleClose2}
               arr={arr}
               setArray2={setArray2}
+              setCurrentPage={setCurrentPage}
             />
             <Modal show={showDelete} onHide={handleCloseDelete}>
               <Modal.Header closeButton>

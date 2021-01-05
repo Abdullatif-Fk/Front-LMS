@@ -1,31 +1,63 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ModalStyle.scss";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function AddModal({ show, handleClose, arr, setArray2 }) {
-  const [class_info, Setclass_info] = useState([]);
+  const [section_info, Setsection_info] = useState([]);
+  const [classes, Setclasses] = useState([]);
 
   function handleInputChange(e) {
     const { value, name } = e.target;
-
-    Setclass_info({
-      ...class_info,
-      [name]: value,
-    });
-    console.log(class_info);
+    console.log(e.target);
+    if (name == "class_id")
+      Setsection_info({
+        ...section_info,
+        [name]: value,
+      });
+    else
+      Setsection_info({
+        ...section_info,
+        [name]: value,
+      });
+    console.log(section_info);
   }
+
+  useEffect(() => {
+    try {
+      fetch(`http://localhost:8000/api/Classes`, {
+        method: "get",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json.message[0]);
+          Setsection_info({
+            ...section_info,
+            ["class_id"]: json.message[0].ID,
+          });
+          Setclasses(json.message);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [show]);
 
   function submit(e) {
     e.preventDefault();
     const body = new FormData();
 
-    body.append("name", class_info.name);
+    body.append("name", section_info.name);
+    body.append("max_students", section_info.max_students);
+    body.append("class_id", section_info.class_id);
 
     console.log(body);
-    fetch(`http://localhost:8000/api/Classes`, {
+    fetch(`http://localhost:8000/api/Sections`, {
       method: "post",
       body: body,
     })
@@ -77,15 +109,42 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
       <Modal.Body>
         <Form className="ModalStyle" onSubmit={submit}>
           <Form.Group controlId="formBasicfirstname">
-            <Form.Label>Class Name</Form.Label>
+            <Form.Label>Section Name</Form.Label>
             <Form.Control
               required
               type="text"
-              placeholder="Enter your class name"
+              placeholder="Enter your section name"
               name="name"
               onChange={handleInputChange}
             />
             <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Max Students</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter max nb of students"
+              name="max_students"
+              onChange={handleInputChange}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
+
+          <Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Select Class</Form.Label>
+            <Form.Control
+              required
+              as="select"
+              name="class_id"
+              onChange={handleInputChange}
+            >
+              {classes.map((o) => (
+                <option key={o.ID} value={o.ID}>
+                  {o.name}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
 
           <Button variant="primary" type="submit">

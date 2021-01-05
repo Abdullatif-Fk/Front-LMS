@@ -1,13 +1,24 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
+import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { Wrap, TableBody } from "../globalStyle/global.js";
 
 import { useSelector, useDispatch } from "react-redux";
-import ClassID from "../../store/actions/ClassID";
+import SectionID from "../../store/actions/SectionID";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Row, Col, Spinner, Modal, Button, Table } from "react-bootstrap";
+import {
+  ListGroup,
+  Row,
+  Col,
+  Spinner,
+  Modal,
+  Button,
+  Form,
+  Image,
+  Table,
+} from "react-bootstrap";
 
 let ModalEdit = () => <></>;
 let AddModal = () => <></>;
@@ -54,17 +65,21 @@ function Index() {
   };
 
   const searchInput = useSelector((state) => {
+    console.log(state);
     return state.Searching.search;
   });
+
   const ID = useSelector((state) => {
-    console.log(state.SearchClass.ClassID);
-    return state.SearchClass.ClassID;
+    console.log(state.SectionID.SectionID);
+    return state.SectionID.SectionID;
   });
 
   const [Pagination, setPagination] = useState({
     data: classes.map((value, index) => ({
       id: value.ID,
       name: value.name,
+      max_students: value.max_students,
+      class_name: value.class_name,
     })),
     offset: 0,
     numberPerPage: 2,
@@ -74,7 +89,7 @@ function Index() {
 
   useEffect(() => {
     try {
-      fetch("http://localhost:8000/api/Classes", {
+      fetch("http://localhost:8000/api/Sections", {
         method: "get",
         headers: {
           Accept: "application/json",
@@ -89,6 +104,8 @@ function Index() {
               data: json.message.map((value, index) => ({
                 id: value.ID,
                 name: value.name,
+                max_students: value.max_students,
+                class_name: value.class_name,
               })),
               offset: 0,
               numberPerPage: 2,
@@ -99,6 +116,8 @@ function Index() {
               json.message.map((value, index) => ({
                 id: value.ID,
                 name: value.name,
+                max_students: value.max_students,
+                class_name: value.class_name,
               }))
             );
           } else
@@ -120,6 +139,54 @@ function Index() {
   }, [arr]);
 
   useEffect(() => {
+    console.log(Object.keys(Filter).length);
+    if (Object.keys(Filter).length > 0) {
+      try {
+        setPagination({
+          data: classes
+            .filter((item) => {
+              return String(item.class_name) == String(Filter["class_name"]);
+            })
+            .map((value, index) => ({
+              id: value.id,
+              name: value.name,
+              max_students: value.max_students,
+              class_name: value.class_name,
+            })),
+          offset: 0,
+          numberPerPage: 2,
+          pageCount: 0,
+          currentData: [Pagination.data],
+        });
+        setCurrentPage(0);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [Filter]);
+
+  function handleInputChange(e) {
+    const { value, name } = e.target;
+
+    setFilter({
+      [name]: value,
+    });
+  }
+  function getUnique(arr, index) {
+    const unique = arr
+      .map((e) => e[index])
+
+      // store the keys of the unique objects
+      .map((e, i, final) => final.indexOf(e) === i && i)
+
+      // eliminate the dead keys & store unique objects
+      .filter((e) => arr[e])
+      .map((e) => arr[e]);
+
+    return unique;
+  }
+
+  useEffect(() => {
     if (searchInput != "") {
       try {
         if (
@@ -137,6 +204,8 @@ function Index() {
               .map((value, index) => ({
                 id: value.id,
                 name: value.name,
+                max_students: value.max_students,
+                class_name: value.class_name,
               })),
             offset: 0,
             numberPerPage: 2,
@@ -145,7 +214,7 @@ function Index() {
           });
           setCurrentPage(0);
         } else {
-          toast.info("Couldn't find any class", {
+          toast.info("Couldn't find any section", {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -188,7 +257,7 @@ function Index() {
 
   const del = (id) => {
     try {
-      fetch(`http://localhost:8000/api/Classes/${id}`, {
+      fetch(`http://localhost:8000/api/Sections/${id}`, {
         method: "delete",
         headers: {
           "Content-Type": "application/json",
@@ -258,8 +327,28 @@ function Index() {
                 className="btn btn-primary btn-circle btn-xl"
                 onClick={toggleModalForm2}
               >
-                Add New Class
+                Add New Sections
               </button>
+            </Col>
+            <Col>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="class_name"
+                  onChange={handleInputChange}
+                >
+                  {getUnique(classes, "class_name").map((o) =>
+                    Filter["class_name"] == o.class_name ? (
+                      <option key={o.class_name} selected>
+                        {o.class_name}
+                      </option>
+                    ) : (
+                      <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
+                </Form.Control>
+              </Form.Group>
             </Col>
           </Row>
           <Row>
@@ -296,8 +385,28 @@ function Index() {
                 className="btn btn-primary btn-circle btn-xl"
                 onClick={toggleModalForm2}
               >
-                Add New Class
+                Add New Section
               </button>
+            </Col>
+            <Col>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="class_name"
+                  onChange={handleInputChange}
+                >
+                  {getUnique(classes, "class_name").map((o) =>
+                    Filter["class_name"] == o.class_name ? (
+                      <option key={o.class_name} selected>
+                        {o.class_name}
+                      </option>
+                    ) : (
+                      <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
+                </Form.Control>
+              </Form.Group>
             </Col>
           </Row>
 
@@ -306,6 +415,8 @@ function Index() {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Max students</th>
+                <th>Class name</th>
                 <th colSpan="2" className="text-center">
                   Modify
                 </th>
@@ -317,11 +428,13 @@ function Index() {
                   <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>
+                    <td>{item.max_students}</td>
+                    <td>{item.class_name}</td>
                     <td className="text-center">
                       <button
                         className="btn btn-info mr-3"
                         onClick={() => {
-                          dispatch(ClassID(item.id));
+                          dispatch(SectionID(item.id));
                           toggleModalForm();
                         }}
 
