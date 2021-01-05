@@ -4,7 +4,7 @@ import "./ModalStyle.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
+function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
   const [student_info, SetStudent_info] = useState([]);
   const [sections, SetSections] = useState([]);
 
@@ -71,6 +71,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
             draggable: true,
             progress: undefined,
           });
+          setCurrentPage(0);
           handleClose();
         }
       });

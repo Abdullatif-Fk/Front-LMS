@@ -65,6 +65,7 @@ function Index() {
   };
 
   const searchInput = useSelector((state) => {
+    console.log(state);
     return state.Searching.search;
   });
 
@@ -138,23 +139,73 @@ function Index() {
   }, [arr]);
 
   useEffect(() => {
+    console.log(Object.keys(Filter).length);
+    if (Object.keys(Filter).length > 0) {
+      try {
+        setPagination({
+          data: classes
+            .filter((item) => {
+              return String(item.class_name) == String(Filter["class_name"]);
+            })
+            .map((value, index) => ({
+              id: value.id,
+              name: value.name,
+              max_students: value.max_students,
+              class_name: value.class_name,
+            })),
+          offset: 0,
+          numberPerPage: 2,
+          pageCount: 0,
+          currentData: [Pagination.data],
+        });
+        setCurrentPage(0);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [Filter]);
+
+  function handleInputChange(e) {
+    const { value, name } = e.target;
+
+    setFilter({
+      [name]: value,
+    });
+  }
+  function getUnique(arr, index) {
+    const unique = arr
+      .map((e) => e[index])
+
+      // store the keys of the unique objects
+      .map((e, i, final) => final.indexOf(e) === i && i)
+
+      // eliminate the dead keys & store unique objects
+      .filter((e) => arr[e])
+      .map((e) => arr[e]);
+
+    return unique;
+  }
+
+  useEffect(() => {
     if (searchInput != "") {
       try {
         if (
           classes.filter((item) => {
-            return String(item.student_name).includes(String(searchInput));
+            return String(item.name).includes(String(searchInput));
           }).length > 0
         ) {
           setPagination({
             data: classes
               .filter((item) => {
-                return String(item.student_name).includes(String(searchInput));
+                return String(item.name).includes(String(searchInput));
                 //||
                 // String(item.description).includes(String(searchInput))
               })
               .map((value, index) => ({
                 id: value.id,
                 name: value.name,
+                max_students: value.max_students,
+                class_name: value.class_name,
               })),
             offset: 0,
             numberPerPage: 2,
@@ -163,6 +214,15 @@ function Index() {
           });
           setCurrentPage(0);
         } else {
+          toast.info("Couldn't find any section", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           setPagination({
             data: classes,
             offset: 0,
@@ -270,6 +330,26 @@ function Index() {
                 Add New Sections
               </button>
             </Col>
+            <Col>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="class_name"
+                  onChange={handleInputChange}
+                >
+                  {getUnique(classes, "class_name").map((o) =>
+                    Filter["class_name"] == o.class_name ? (
+                      <option key={o.class_name} selected>
+                        {o.class_name}
+                      </option>
+                    ) : (
+                      <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
+                </Form.Control>
+              </Form.Group>
+            </Col>
           </Row>
           <Row>
             <Col sm={5}></Col>
@@ -307,6 +387,26 @@ function Index() {
               >
                 Add New Section
               </button>
+            </Col>
+            <Col>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="class_name"
+                  onChange={handleInputChange}
+                >
+                  {getUnique(classes, "class_name").map((o) =>
+                    Filter["class_name"] == o.class_name ? (
+                      <option key={o.class_name} selected>
+                        {o.class_name}
+                      </option>
+                    ) : (
+                      <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
+                </Form.Control>
+              </Form.Group>
             </Col>
           </Row>
 

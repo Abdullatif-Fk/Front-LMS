@@ -56,7 +56,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
   }
   useEffect(() => {
     try {
-      if (id != "falsee") {
+      if (id != "") {
         //Fetch_Student_By_Id
         fetch(`http://localhost:8000/api/Classes/${id}`, {
           method: "get",
@@ -74,7 +74,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
     } catch (err) {
       console.log(err);
     }
-  }, [show]);
+  }, [show, id]);
   return (
     <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
       <ToastContainer

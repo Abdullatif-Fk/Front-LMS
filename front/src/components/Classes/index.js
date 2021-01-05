@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
-import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { Wrap, TableBody } from "../globalStyle/global.js";
 
@@ -8,17 +7,7 @@ import ClassID from "../../store/actions/ClassID";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import {
-  ListGroup,
-  Row,
-  Col,
-  Spinner,
-  Modal,
-  Button,
-  Form,
-  Image,
-  Table,
-} from "react-bootstrap";
+import { Row, Col, Spinner, Modal, Button, Table } from "react-bootstrap";
 
 let ModalEdit = () => <></>;
 let AddModal = () => <></>;
@@ -135,13 +124,13 @@ function Index() {
       try {
         if (
           classes.filter((item) => {
-            return String(item.student_name).includes(String(searchInput));
+            return String(item.name).includes(String(searchInput));
           }).length > 0
         ) {
           setPagination({
             data: classes
               .filter((item) => {
-                return String(item.student_name).includes(String(searchInput));
+                return String(item.name).includes(String(searchInput));
                 //||
                 // String(item.description).includes(String(searchInput))
               })
@@ -156,6 +145,15 @@ function Index() {
           });
           setCurrentPage(0);
         } else {
+          toast.info("Couldn't find any class", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           setPagination({
             data: classes,
             offset: 0,

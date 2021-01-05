@@ -1,21 +1,19 @@
 import "./App.scss";
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import SplitPane from "react-split-pane";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
-import { Card } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { Row, Col, Container, Button } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
 import SearchAction from "./store/actions/SearchAction";
 import Search from "./components/Student_Search/Search";
 import Classes from "./components/Classes/index";
 import Sections from "./components/Sections/index";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { WrapApp, ForSide } from "./style";
+import { ForSide } from "./style";
 
 const App = () => {
   const [SearchValue, setSearchValue] = useState("");

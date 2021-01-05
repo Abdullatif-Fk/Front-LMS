@@ -1,5 +1,5 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./ModalStyle.scss";
 
 import { ToastContainer, toast } from "react-toastify";

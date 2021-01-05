@@ -5,7 +5,7 @@ import "./ModalStyle.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function AddModal({ show, handleClose, arr, setArray2 }) {
+function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
   const [student_info, SetStudent_info] = useState([]);
   const [sections, SetSections] = useState([]);
 
@@ -72,6 +72,7 @@ function AddModal({ show, handleClose, arr, setArray2 }) {
             progress: undefined,
           });
           setArray2(arr + 1);
+          setCurrentPage(0);
           handleClose();
         }
       });
