@@ -26,6 +26,7 @@ import UserProfile from "views/UserProfile/UserProfile.js";
 import Students from "views/Students/Students.js";
 import Sections from "views/Sections/Sections.js";
 import Classes from "views/Classes/Classes.js";
+import Report from "views/Report/Report.js";
 
 import NotificationsPage from "views/Notifications/Notifications.js";
 // core components/views for RTL layout
@@ -72,6 +73,13 @@ const dashboardRoutes = [
     name: "Notifications",
     icon: Notifications,
     component: NotificationsPage,
+    layout: "/admin",
+  },
+  {
+    path: "/report",
+    name: "Report",
+    icon: "content_paste",
+    component: Report,
     layout: "/admin",
   },
 ];

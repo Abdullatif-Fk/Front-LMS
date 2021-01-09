@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/Abdullatif-Fk/Front-LMS/issues"
   },
-  "homepage": "https://github.com/Abdullatif-Fk/Front-LMS#readme"
+  "homepage": "https://github.com/Abdullatif-Fk/Front-LMS#readme",
+  "dependencies": {
+    "jspdf": "^2.2.0",
+    "jspdf-autotable": "^3.5.13"
+  }
 }
