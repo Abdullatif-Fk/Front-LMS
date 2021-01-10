@@ -14,7 +14,7 @@ import { Wrap } from "../globalStyle/global.js";
 
 import TableCell from "@material-ui/core/TableCell";
 // core components
-import { Image, Modal, Button } from "react-bootstrap";
+import { Image, Modal, Button, Spinner } from "react-bootstrap";
 import { Suspense, lazy, useState } from "react";
 
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -129,62 +129,87 @@ export default function CustomTable(props) {
             </TableRow>
           </TableHead>
         ) : null}
-        <TableBody>
-          {tableData.map((prop, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell} key={key}>
-                  {prop.id && (
-                    <Image
-                      width={100}
-                      height={100}
-                      src={"http://localhost:8000/" + prop.picture}
-                      rounded
-                    />
-                  )}
-                </TableCell>
 
-                <TableCell className={classes.tableCell} key={key}>
-                  {prop.student_name}{" "}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                  {prop.class_name + "(" + prop.class_id + ")"}{" "}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                  {prop.section_name + "(" + prop.section_id + ")"}{" "}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                  <button
-                    className="btn btn-info mr-3"
-                    onClick={() => {
-                      dispatch(EditID(prop.id));
-                      toggleModalForm();
-                    }}
+        {tableData && (
+          <TableBody>
+            {console.log(tableData)}
+            {tableData.map((prop, key) => {
+              return (
+                prop.id && (
+                  <TableRow key={key} className={classes.tableBodyRow}>
+                    {prop.id ? (
+                      <TableCell className={classes.tableCell} key={prop.id}>
+                        {prop.picture ? (
+                          <Image
+                            width={100}
+                            height={100}
+                            src={"http://localhost:8000/" + prop.picture}
+                            rounded
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </TableCell>
+                    ) : (
+                      <Spinner animation="border" role="status">
+                        <span className="sr-only">Loading...</span>
+                      </Spinner>
+                    )}
 
-                    // onClick={async () => {
-                    //    handleShow(item.id);
-                    //    setId(item.id);
-                    // }}
-                  >
-                    Edit
-                  </button>
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => {
-                      handleShowDelete(prop.id);
-                      // del(prop.id);
-                      // setCurrentPage(0);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
+                    <TableCell
+                      className={classes.tableCell}
+                      key={prop.student_name}
+                    >
+                      {prop.student_name && prop.student_name}{" "}
+                    </TableCell>
+                    <TableCell
+                      className={classes.tableCell}
+                      key={prop.class_name + prop.id}
+                    >
+                      {prop.class_name + "(" + prop.class_id + ")"}{" "}
+                    </TableCell>
+
+                    <TableCell
+                      className={classes.tableCell}
+                      key={prop.section_name + prop.id}
+                    >
+                      {prop.section_name + "(" + prop.section_id + ")"}{" "}
+                    </TableCell>
+
+                    <TableCell className={classes.tableCell} key={key + "555"}>
+                      <button
+                        className="btn btn-info mr-3"
+                        onClick={() => {
+                          dispatch(EditID(prop.id));
+                          toggleModalForm();
+                        }}
+
+                        // onClick={async () => {
+                        //    handleShow(item.id);
+                        //    setId(item.id);
+                        // }}
+                      >
+                        Edit
+                      </button>
+                    </TableCell>
+                    <TableCell className={classes.tableCell} key={key + "222"}>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                          handleShowDelete(prop.id);
+                          // del(prop.id);
+                          // setCurrentPage(0);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                )
+              );
+            })}
+          </TableBody>
+        )}
       </Table>
       <Suspense fallback={null}>
         <ModalEdit

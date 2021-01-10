@@ -126,7 +126,6 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
     }
   }, [show]);
   if (Section.length < 1) {
-    console.log(555555555555555555555, Section);
     return (
       <div style={{ position: "absolute", left: "50%" }}>
         <div
@@ -163,60 +162,75 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
         <Modal.Header closeButton>
           <Modal.Title>Modal title</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form className="ModalStyle" onSubmit={submit}>
-            <Form.Group controlId="formBasicfirstname">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                placeholder="Enter your name"
-                name="name"
-                defaultValue={Section.name}
-                onChange={handleInputChange}
-              />
-              <Form.Text className="text-muted"></Form.Text>
-            </Form.Group>
+        {Section.name && Section.max_students && Section.class_name ? (
+          <Modal.Body>
+            <Form className="ModalStyle" onSubmit={submit}>
+              <Form.Group controlId="formBasicfirstname">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  placeholder="Enter your name"
+                  name="name"
+                  defaultValue={Section.name}
+                  onChange={handleInputChange}
+                />
+                <Form.Text className="text-muted"></Form.Text>
+              </Form.Group>
 
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Max Students</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter max nb of students"
-                name="max_students"
-                defaultValue={Section.max_students}
-                onChange={handleInputChange}
-              />
-              <Form.Text className="text-muted"></Form.Text>
-            </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Max Students</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter max nb of students"
+                  name="max_students"
+                  defaultValue={Section.max_students}
+                  onChange={handleInputChange}
+                />
+                <Form.Text className="text-muted"></Form.Text>
+              </Form.Group>
 
-            <Form.Group controlId="exampleForm.ControlSelect1">
-              <Form.Label>Select Class</Form.Label>
-              <Form.Control
-                required
-                as="select"
-                name="class_id"
-                onChange={handleInputChange}
-              >
-                {classes.map((o) =>
-                  o.name == Section.class_name ? (
-                    <option key={o.id} value={o.id} selected>
-                      {o.name}
-                    </option>
-                  ) : (
-                    <option key={o.id} value={o.id}>
-                      {o.name}
-                    </option>
-                  )
-                )}
-              </Form.Control>
-            </Form.Group>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Class</Form.Label>
+                <Form.Control
+                  required
+                  as="select"
+                  name="class_id"
+                  onChange={handleInputChange}
+                >
+                  {classes.map((o) =>
+                    o.name == Section.class_name ? (
+                      <option key={o.id} value={o.id} selected>
+                        {o.name}
+                      </option>
+                    ) : (
+                      <option key={o.id} value={o.id}>
+                        {o.name}
+                      </option>
+                    )
+                  )}
+                </Form.Control>
+              </Form.Group>
 
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Form>
-        </Modal.Body>
+              <Button variant="primary" type="submit">
+                Submit
+              </Button>
+            </Form>
+          </Modal.Body>
+        ) : (
+          <div style={{ position: "absolute", left: "50%", top: "50%" }}>
+            <div
+              style={{
+                position: "relative",
+                left: "-50%",
+              }}
+            >
+              <Spinner animation="border" role="status">
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            </div>
+          </div>
+        )}
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close

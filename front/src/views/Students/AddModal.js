@@ -20,10 +20,12 @@ function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
       });
     } else {
       if (name == "section_name") {
-        var newValue = value.split("(");
+        // var newValue = value.split("(");
+        // var classValue = newValue[1].split(")");
         SetStudent_info({
           ...student_info,
-          [name]: newValue[0].trim(),
+          [name]: value,
+          // ["class_name"]: classValue[0].trim(),
         });
       } else
         SetStudent_info({
@@ -42,7 +44,8 @@ function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
     body.append("last_name", student_info.last_name);
     body.append("first_name", student_info.first_name);
     body.append("email", student_info.email);
-    body.append("section_name", student_info.section_name);
+    body.append("section_id", student_info.section_id);
+    console.log(student_info);
 
     console.log(body);
     fetch(`http://localhost:8000/api/Add_Student`, {
@@ -92,7 +95,7 @@ function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
         .then((json) => {
           SetStudent_info({
             ...student_info,
-            ["section_name"]: json.message[0].section_name,
+            ["section_id"]: json.message[0].section_id,
           });
           SetSections(json.message);
         });
@@ -175,7 +178,7 @@ function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
               onChange={handleInputChange}
             >
               {sections.map((o) => (
-                <option key={o.section_name}>
+                <option key={o.section_name} value={o.section_id}>
                   {o.section_name}
                   {" ( "} Class: {o.class_name}
                   {" ) "}
@@ -191,6 +194,7 @@ function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
               onChange={handleInputChange}
             />
           </Form.Group>
+
           <Button variant="primary" type="submit">
             Submit
           </Button>

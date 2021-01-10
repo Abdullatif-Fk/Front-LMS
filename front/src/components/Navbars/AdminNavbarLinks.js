@@ -26,7 +26,6 @@ export default function AdminNavbarLinks() {
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    console.log(e);
     setSearchValue(e.target.value);
   };
   const classes = useStyles();

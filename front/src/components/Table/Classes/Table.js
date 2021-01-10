@@ -135,50 +135,57 @@ export default function CustomTable(props) {
             </TableRow>
           </TableHead>
         ) : null}
-        <TableBody>
-          {tableData.map((prop, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell} key={key}>
-                  {prop.id && prop.id}
-                </TableCell>
+        {tableData && (
+          <TableBody>
+            {tableData.map((prop, key) => {
+              return (
+                prop.id && (
+                  <TableRow key={key} className={classes.tableBodyRow}>
+                    <TableCell className={classes.tableCell} key={prop.id}>
+                      {prop.id && prop.id}
+                    </TableCell>
 
-                <TableCell className={classes.tableCell} key={key}>
-                  {prop.name && prop.name}{" "}
-                </TableCell>
+                    <TableCell className={classes.tableCell} key={prop.name}>
+                      {prop.name && prop.name}{" "}
+                    </TableCell>
 
-                <TableCell className={classes.tableCell} key={key}>
-                  <button
-                    className="btn btn-info mr-3"
-                    onClick={() => {
-                      dispatch(ClassID(prop.id));
-                      toggleModalForm();
-                    }}
+                    <TableCell
+                      className={classes.tableCell}
+                      key={prop.name + "123"}
+                    >
+                      <button
+                        className="btn btn-info mr-3"
+                        onClick={() => {
+                          dispatch(ClassID(prop.id));
+                          toggleModalForm();
+                        }}
 
-                    // onClick={async () => {
-                    //    handleShow(item.id);
-                    //    setId(item.id);
-                    // }}
-                  >
-                    Edit
-                  </button>
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => {
-                      handleShowDelete(prop.id);
-                      // del(prop.id);
-                      // setCurrentPage(0);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
+                        // onClick={async () => {
+                        //    handleShow(item.id);
+                        //    setId(item.id);
+                        // }}
+                      >
+                        Edit
+                      </button>
+                    </TableCell>
+                    <TableCell className={classes.tableCell} key={key + "11"}>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                          handleShowDelete(prop.id);
+                          // del(prop.id);
+                          // setCurrentPage(0);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                )
+              );
+            })}
+          </TableBody>
+        )}
       </Table>
       <Suspense fallback={null}>
         <ModalEdit

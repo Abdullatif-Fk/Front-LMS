@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Form, Col, Button } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -94,13 +94,28 @@ export default function Report() {
         SetSendData({
           class_id: SendData.class_id ? SendData.class_id : Classes[0].class_id,
         });
-      if (value == "section")
+      if (value == "section") {
+        console.log(
+          Sections.filter((o) => SendData.class_id == o.class_id).map((o) => {
+            return o.id;
+          })[0]
+        );
+
         SetSendData({
           class_id: SendData.class_id ? SendData.class_id : Classes[0].class_id,
-          section_id: SendData.section_id
-            ? SendData.section_id
-            : Sections[0].id,
+          // section_id: SendData.section_id
+          //   ? SendData.section_id
+          //   : Sections[0].id,
+          section_id: Sections.filter((o) =>
+            SendData.class_id
+              ? SendData.class_id
+              : Classes[0].class_id == o.class_id
+          ).map((o) => {
+            console.log(o);
+            return o.id;
+          })[0],
         });
+      }
 
       if (value == "class + date")
         SetSendData({
@@ -113,16 +128,37 @@ export default function Report() {
           class_id: SendData.class_id ? SendData.class_id : Classes[0].class_id,
           date_from: SendData.date_from ? SendData.date_from : "",
           date_to: SendData.date_to ? SendData.date_to : "",
-          section_id: SendData.section_id
-            ? SendData.section_id
-            : Sections[0].id,
+          // section_id: SendData.section_id
+          //   ? SendData.section_id
+          //   : Sections[0].id,
+          section_id: Sections.filter((o) =>
+            SendData.class_id
+              ? SendData.class_id
+              : Classes[0].class_id == o.class_id
+          ).map((o) => {
+            console.log(o.id);
+            return o.id;
+          })[0],
         });
     } else {
-      console.log(SendData);
-      SetSendData({
-        ...SendData,
-        [name]: value,
-      });
+      if (name == "class_id")
+        SetSendData({
+          ...SendData,
+          ["section_id"]: Sections.filter((o) =>
+            SendData.class_id
+              ? SendData.class_id
+              : Classes[0].class_id == o.class_id
+          ).map((o) => {
+            return o.id;
+          })[0],
+
+          [name]: value,
+        });
+      else
+        SetSendData({
+          ...SendData,
+          [name]: value,
+        });
     }
     console.log(SendData);
   }
@@ -556,7 +592,7 @@ export default function Report() {
             startY: 60,
           });
 
-          doc.save("demo.pdf");
+          doc.save("report.pdf");
         }
         console.log(repo_info);
       } catch (err) {
@@ -600,8 +636,9 @@ export default function Report() {
           Download your PDf report .
         </p>
       </CardHeader>
-      <CardBody>
-        <Col>
+
+      <Col xs={12} md={6}>
+        <CardBody>
           <ToastContainer
             position="top-center"
             autoClose={5000}
@@ -613,27 +650,26 @@ export default function Report() {
             draggable
             pauseOnHover
           />
-          <Form className="ModalStyle" onSubmit={generatePDF}>
-            <Row>
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Select Section</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="value"
-                  onChange={handleInputChange}
-                >
-                  {PrintReport.map((o) =>
-                    Value == o ? (
-                      <option key={o} selected>
-                        {o}
-                      </option>
-                    ) : (
-                      <option key={o}>{o}</option>
-                    )
-                  )}
-                </Form.Control>
-              </Form.Group>
-            </Row>
+          <Form onSubmit={generatePDF}>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Select Section</Form.Label>
+              <Form.Control
+                as="select"
+                name="value"
+                onChange={handleInputChange}
+              >
+                {PrintReport.map((o) =>
+                  Value == o ? (
+                    <option key={o} selected>
+                      {o}
+                    </option>
+                  ) : (
+                    <option key={o}>{o}</option>
+                  )
+                )}
+              </Form.Control>
+            </Form.Group>
+
             {SendData.student_id != undefined ? (
               <Row>
                 <Form.Group controlId="exampleForm.ControlSelect0">
@@ -695,9 +731,15 @@ export default function Report() {
                     {Object.keys(Sections).length != 0 &&
                       Sections.map((o) =>
                         SendData.class_id == o.class_id ? (
-                          <option key={o.id} value={o.id}>
-                            {o.name}
-                          </option>
+                          SendData.section_id == o.id ? (
+                            <option key={o.id} value={o.id}>
+                              {o.name}
+                            </option>
+                          ) : (
+                            <option key={o.id} value={o.id}>
+                              {o.name}
+                            </option>
+                          )
                         ) : (
                           ""
                         )
@@ -745,8 +787,8 @@ export default function Report() {
             </Button>
           </Form>
           {/* <button onClick={generatePDF}>click me</button>; */}
-        </Col>
-      </CardBody>
+        </CardBody>
+      </Col>
     </Card>
   );
 }

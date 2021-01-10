@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 // import EditID from "../../store/actions/EditID";
 import { ToastContainer, toast } from "react-toastify";
+import "./ModalStyle.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { Row, Col, Spinner, Form } from "react-bootstrap";
 // @material-ui/core components

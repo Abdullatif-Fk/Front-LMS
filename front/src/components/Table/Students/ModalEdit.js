@@ -1,6 +1,6 @@
 /* eslint react/prop-types: 0 */
 
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import "./ModalStyle.scss";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,11 +19,11 @@ function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
         [name]: e.target.files[0],
       });
     } else {
-      if (name == "section_name") {
-        var newValue = value.split("(");
+      if (name == "section_id") {
+        // var newValue = value.split("(");
         SetStudent_info({
           ...student_info,
-          [name]: newValue[0].trim(),
+          [name]: value,
         });
       } else
         SetStudent_info({
@@ -43,7 +43,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
     body.append("last_name", student_info.last_name);
     body.append("first_name", student_info.first_name);
     body.append("email", student_info.email);
-    body.append("section_name", student_info.section_name);
+    body.append("section_id", student_info.section_id);
     console.log(body);
     fetch(`http://localhost:8000/api/Edit_Student/${id}`, {
       method: "post",
@@ -78,11 +78,8 @@ function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
         }
       });
   }
+
   useEffect(() => {
-    console.log(1111111);
-  });
-  useEffect(() => {
-    console.log(1111111);
     try {
       if (id != "falsee") {
         fetch(`http://localhost:8000/api/Fetch_Sections`, {
@@ -131,99 +128,118 @@ function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
       <Modal.Header closeButton>
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form
-          className="ModalStyle"
-          encType="multipart/form-data"
-          onSubmit={submit}
-        >
-          <Form.Group controlId="formBasicfirstname">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control
-              type="text"
-              required
-              placeholder="Enter your name"
-              name="first_name"
-              defaultValue={student_info.first_name}
-              onChange={handleInputChange}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          <Form.Group controlId="formBasiclastname">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control
-              type="text"
-              required
-              placeholder="Enter your last name"
-              name="last_name"
-              defaultValue={student_info.last_name}
-              onChange={handleInputChange}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              required
-              placeholder="Enter email"
-              name="email"
-              defaultValue={student_info.email}
-              onChange={handleInputChange}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Phone nb</Form.Label>
-            <Form.Control
-              type="text"
-              required
-              placeholder="Enter your phone"
-              name="phone_number"
-              defaultValue={student_info.phone_number}
-              onChange={handleInputChange}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
+      {student_info.first_name &&
+      student_info.last_name &&
+      student_info.email &&
+      student_info.phone_number &&
+      student_info.section_id ? (
+        <Modal.Body>
+          <Form
+            className="ModalStyle"
+            encType="multipart/form-data"
+            onSubmit={submit}
+          >
+            <Form.Group controlId="formBasicfirstname">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                placeholder="Enter your name"
+                name="first_name"
+                defaultValue={student_info.first_name}
+                onChange={handleInputChange}
+              />
+              <Form.Text className="text-muted"></Form.Text>
+            </Form.Group>
+            <Form.Group controlId="formBasiclastname">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                placeholder="Enter your last name"
+                name="last_name"
+                defaultValue={student_info.last_name}
+                onChange={handleInputChange}
+              />
+              <Form.Text className="text-muted"></Form.Text>
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                required
+                placeholder="Enter email"
+                name="email"
+                defaultValue={student_info.email}
+                onChange={handleInputChange}
+              />
+              <Form.Text className="text-muted"></Form.Text>
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Phone nb</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                placeholder="Enter your phone"
+                name="phone_number"
+                defaultValue={student_info.phone_number}
+                onChange={handleInputChange}
+              />
+              <Form.Text className="text-muted"></Form.Text>
+            </Form.Group>
 
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Select Section</Form.Label>
-            <Form.Control
-              as="select"
-              required
-              name="section_name"
-              defaultValue={student_info.section_name}
-              onChange={handleInputChange}
-            >
-              {sections.map((o) =>
-                o.section_name == student_info.section_name ? (
-                  <option key={o.section_name} selected>
-                    {o.section_name}
-                    {" ( "} Class: {o.class_name}
-                    {" ) "}
-                  </option>
-                ) : (
-                  <option key={o.section_name}>
-                    {o.section_name}
-                    {" ( "} Class: {o.class_name} {" ) "}
-                  </option>
-                )
-              )}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="formBasicCheckbox">
-            <Form.File
-              type="file"
-              name="picture"
-              required
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </Modal.Body>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Select Section</Form.Label>
+              <Form.Control
+                as="select"
+                required
+                name="section_id"
+                defaultValue={student_info.section_id}
+                onChange={handleInputChange}
+              >
+                {sections.map((o) =>
+                  o.section_id == student_info.section_id ? (
+                    <option key={o.section_id} value={o.section_id} selected>
+                      {o.section_name}
+                      {" ( "} Class: {o.class_name}
+                      {" ) "}
+                    </option>
+                  ) : (
+                    <option key={o.section_id} value={o.section_id}>
+                      {o.section_name}
+                      {" ( "} Class: {o.class_name} {" ) "}
+                    </option>
+                  )
+                )}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.File
+                type="file"
+                name="picture"
+                required
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      ) : (
+        <div style={{ position: "absolute", left: "50%", top: "50%" }}>
+          <div
+            style={{
+              position: "relative",
+              left: "-50%",
+            }}
+          >
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </div>
+        </div>
+      )}
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close

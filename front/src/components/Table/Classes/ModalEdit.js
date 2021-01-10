@@ -1,5 +1,5 @@
 /* eslint react/prop-types: 0 */
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import "./ModalStyle.scss";
 import { ToastContainer, toast } from "react-toastify";
@@ -92,26 +92,41 @@ function ModalEdit({ show, handleClose, id, arr, setArray2 }) {
       <Modal.Header closeButton>
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form className="ModalStyle" onSubmit={submit}>
-          <Form.Group controlId="formBasicfirstname">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control
-              type="text"
-              required
-              placeholder="Enter your name"
-              name="name"
-              defaultValue={Class.name}
-              onChange={handleInputChange}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
+      {Class.name ? (
+        <Modal.Body>
+          <Form className="ModalStyle" onSubmit={submit}>
+            <Form.Group controlId="formBasicfirstname">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                placeholder="Enter your name"
+                name="name"
+                defaultValue={Class.name}
+                onChange={handleInputChange}
+              />
+              <Form.Text className="text-muted"></Form.Text>
+            </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </Modal.Body>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      ) : (
+        <div style={{ position: "absolute", left: "50%", top: "50%" }}>
+          <div
+            style={{
+              position: "relative",
+              left: "-50%",
+            }}
+          >
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </div>
+        </div>
+      )}
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close

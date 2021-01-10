@@ -209,6 +209,16 @@ export default function Students() {
           });
           setCurrentPage(0);
         } else {
+          toast.info("Couldn't find any Student", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
           setPagination({
             data: students,
             offset: 0,
@@ -224,14 +234,14 @@ export default function Students() {
   }, [searchInput]);
 
   useEffect(() => {
-    console.log(Object.keys(Filter).length);
+    console.log(Filter, students);
     if (Object.keys(Filter).length > 0) {
       try {
         setPagination({
           data: students
             .filter((item) => {
               return (
-                String(item.section_name) == String(Filter["section_name"]) ||
+                String(item.section_name) == String(Filter["section_name"]) &&
                 String(item.class_name) == String(Filter["class_name"])
               );
             })
@@ -249,6 +259,7 @@ export default function Students() {
           pageCount: 0,
           currentData: [Pagination.data],
         });
+
         setCurrentPage(0);
       } catch (err) {
         console.log(err);
@@ -275,8 +286,10 @@ export default function Students() {
   };
   function handleInputChange(e) {
     const { value, name } = e.target;
+    console.log("okk");
 
     setFilter({
+      ...Filter,
       [name]: value,
     });
   }
@@ -307,27 +320,7 @@ export default function Students() {
         <Col>
           <Row>
             <Col sm={1}></Col>
-            <Col sm={4}>
-              {" "}
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Select Section</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="section_name"
-                  onChange={handleInputChange}
-                >
-                  {sections.map((o) =>
-                    Filter["section_name"] == o.section_name ? (
-                      <option key={o.section_id} selected>
-                        {o.section_name}
-                      </option>
-                    ) : (
-                      <option key={o.section_id}>{o.section_name}</option>
-                    )
-                  )}
-                </Form.Control>
-              </Form.Group>
-            </Col>
+
             <Col sm={4}>
               {" "}
               <Form.Group controlId="exampleForm.ControlSelect2">
@@ -338,12 +331,37 @@ export default function Students() {
                   onChange={handleInputChange}
                 >
                   {classes.map((o) =>
-                    Filter["section_name"] == o.section_name ? (
+                    Filter["class_name"] == o.class_name ? (
                       <option key={o.class_name} selected>
                         {o.class_name}
                       </option>
                     ) : (
                       <option key={o.class_name}>{o.class_name}</option>
+                    )
+                  )}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+            <Col sm={4}>
+              {" "}
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select Section</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="section_name"
+                  onChange={handleInputChange}
+                >
+                  {sections.map((o) =>
+                    Filter["class_name"] == o.class_name ? (
+                      Filter["section_name"] == o.section_name ? (
+                        <option key={o.section_id} selected>
+                          {o.section_name}
+                        </option>
+                      ) : (
+                        <option key={o.section_id}>{o.section_name}</option>
+                      )
+                    ) : (
+                      ""
                     )
                   )}
                 </Form.Control>
@@ -393,27 +411,6 @@ export default function Students() {
                   <Col sm={1}></Col>
                   <Col sm={4}>
                     {" "}
-                    <Form.Group controlId="exampleForm.ControlSelect1">
-                      <Form.Label>Select Section</Form.Label>
-                      <Form.Control
-                        as="select"
-                        name="section_name"
-                        onChange={handleInputChange}
-                      >
-                        {sections.map((o) =>
-                          Filter["section_name"] == o.section_name ? (
-                            <option key={o.section_id} selected>
-                              {o.section_name}
-                            </option>
-                          ) : (
-                            <option key={o.section_id}>{o.section_name}</option>
-                          )
-                        )}
-                      </Form.Control>
-                    </Form.Group>
-                  </Col>
-                  <Col sm={4}>
-                    {" "}
                     <Form.Group controlId="exampleForm.ControlSelect2">
                       <Form.Label>Select Class</Form.Label>
                       <Form.Control
@@ -422,7 +419,7 @@ export default function Students() {
                         onChange={handleInputChange}
                       >
                         {classes.map((o) =>
-                          Filter["section_name"] == o.section_name ? (
+                          Filter["class_name"] == o.class_name ? (
                             <option key={o.class_name} selected>
                               {o.class_name}
                             </option>
@@ -433,6 +430,34 @@ export default function Students() {
                       </Form.Control>
                     </Form.Group>
                   </Col>
+                  <Col sm={4}>
+                    {" "}
+                    <Form.Group controlId="exampleForm.ControlSelect1">
+                      <Form.Label>Select Section</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="section_name"
+                        onChange={handleInputChange}
+                      >
+                        {sections.map((o) =>
+                          Filter["class_name"] == o.class_name ? (
+                            Filter["section_name"] == o.section_name ? (
+                              <option key={o.section_id} selected>
+                                {o.section_name}
+                              </option>
+                            ) : (
+                              <option key={o.section_id}>
+                                {o.section_name}
+                              </option>
+                            )
+                          ) : (
+                            ""
+                          )
+                        )}
+                      </Form.Control>
+                    </Form.Group>
+                  </Col>
+
                   <Col className="left mb-2 text-center m-auto">
                     <button
                       className="btn btn-primary btn-circle btn-xl"
