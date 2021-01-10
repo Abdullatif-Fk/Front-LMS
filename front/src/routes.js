@@ -18,63 +18,61 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 
-import Notifications from "@material-ui/icons/Notifications";
-
 // core components/views for Admin layout
-import DashboardPage from "views/Dashboard/Dashboard.js";
-import UserProfile from "views/UserProfile/UserProfile.js";
+import EditAdmin from "views/EditAdmin/EditAdmin.js";
+import AddAdmin from "views/AddAdmin/AddAdmin";
 import Students from "views/Students/Students.js";
 import Sections from "views/Sections/Sections.js";
 import Classes from "views/Classes/Classes.js";
 import Report from "views/Report/Report.js";
+import Admins from "views/Admins/Admins";
 
-import NotificationsPage from "views/Notifications/Notifications.js";
 // core components/views for RTL layout
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: Dashboard,
-    component: DashboardPage,
+    path: "/user",
+    name: "Admin Profile",
+    icon: Person,
+    component: EditAdmin,
     layout: "/admin",
   },
   {
-    path: "/user",
-    name: "User Profile",
+    path: "/adduser",
+    name: "Add Admin",
     icon: Person,
-    component: UserProfile,
+    component: AddAdmin,
     layout: "/admin",
   },
   {
     path: "/students",
     name: "Students",
-    icon: "content_paste",
+    icon: Dashboard,
     component: Students,
     layout: "/admin",
   },
   {
     path: "/sections",
     name: "Sections",
-    icon: "content_paste",
+    icon: Dashboard,
     component: Sections,
+    layout: "/admin",
+  },
+  {
+    path: "/fetchusers",
+    name: "All admins",
+    icon: Dashboard,
+    component: Admins,
     layout: "/admin",
   },
   {
     path: "/classes",
     name: "Classes",
-    icon: "content_paste",
+    icon: Dashboard,
     component: Classes,
     layout: "/admin",
   },
 
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin",
-  },
   {
     path: "/report",
     name: "Report",
