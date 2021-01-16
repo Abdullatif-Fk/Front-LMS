@@ -20,7 +20,14 @@
   },
   "homepage": "https://github.com/Abdullatif-Fk/Front-LMS#readme",
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
+    "axios": "^0.21.1",
+    "bootstrap": "^4.5.3",
     "jspdf": "^2.2.0",
     "jspdf-autotable": "^3.5.13"
+  },
+  "devDependencies": {
+    "node-sass": "^5.0.0"
   }
 }
