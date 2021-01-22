@@ -4,29 +4,49 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
-import { BrowserRouter,Route,Switch } from "react-router-dom";
+import { BrowserRouter,Route,Switch,Redirect, Router,useHistory } from "react-router-dom";
+import { Provider } from "react-redux";
+import Admin from "layouts/Admin.js";
+
 import lohinImg from "../../images/education.jpg"
+
+import { createBrowserHistory } from "history";
+const browserHistory =  createBrowserHistory();
+import { useDispatch } from 'react-redux/lib/hooks/useDispatch';
+
+// const dispatch = useDispatch();
+
+let path='';
 const Login=()=>{
-const [data, setState] = useState({
-    email: '',
-    password: ''
-});
+// const [data, setState] = useState({
+//     email: '',
+//     password: ''
+// });
+const [adminData, setAdminData]=useState({
+    token: undefined,
+
+  
+  });
+  let history = useHistory();
 const  handleSubmit = (e) => {
     e.preventDefault();
-    console.log(data);
-    axios.post('http://localhost:8000/api/login',data)
+    // dispatch(listProducts());
+    // console.log(adminData);
+    path="";
+    axios.post('http://localhost:8000/api/login',adminData)
     .then(response => {
-        console.log(response);
-        localstorage.setItem('token',response.data.access_token);
-        <BrowserRouter>
-            <Switch>
-                <Route exact path="/admin/students"></Route>
-            </Switch>
-        </BrowserRouter>
+        // console.log(adminData);
+        adminData.token=response.data.access_token;
+        console.log(adminData);
+        localStorage.setItem('token',response.data.access_token);
+        history.push("/admin");
+        // this.props.history.push('/admin/students')
+
     })
     .catch(err => {
         console.log(err);
     })
+
 }
 
 
@@ -50,15 +70,15 @@ const  handleSubmit = (e) => {
                 </Grid>
                 <TextField label='Email' placeholder='Enter Email'  
                 onChange={
-                    (e)=>setState({
-                    ...data,
+                    (e)=>setAdminData({
+                    ...adminData,
                     email: e.target.value
                     })} 
                 fullWidth required/>
                 <TextField label='Password' placeholder='Enter password' type='password' 
                 onChange={
-                    (e)=>setState({
-                        ...data,
+                    (e)=>setAdminData({
+                        ...adminData,
                         password: e.target.value
                         })} 
                 fullWidth required/>
@@ -71,9 +91,13 @@ const  handleSubmit = (e) => {
                     }
                     label="Remember me"
                  />
-                <Button type='submit' color='primary' variant="contained" onClick={handleSubmit} style={btnstyle} fullWidth>Sign in</Button>
+                   
+                       <Button   type='submit' color='primary' variant="contained"  style={btnstyle} onClick={handleSubmit} fullWidth>Sign in</Button>
+                    
+ 
                 <Typography >
-                     <Link href="#" >
+
+                     <Link href="" >
                         Forgot password ?
                 </Link>
                 </Typography>

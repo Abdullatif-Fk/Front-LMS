@@ -25,7 +25,8 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "jspdf": "^2.2.0",
-    "jspdf-autotable": "^3.5.13"
+    "jspdf-autotable": "^3.5.13",
+    "localstorage-polyfill": "^1.0.1"
   },
   "devDependencies": {
     "node-sass": "^5.0.0"
