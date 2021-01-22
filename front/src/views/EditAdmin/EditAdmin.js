@@ -54,7 +54,8 @@ export default function UserProfile() {
     }
   }
   function submit(e) {
-    var id = 8;
+    var id = localStorage.getItem("id");
+
     e.preventDefault();
 
     const body = new FormData();
@@ -103,7 +104,7 @@ export default function UserProfile() {
       });
   }
   useEffect(() => {
-    var id = 8;
+    var id = localStorage.getItem("id");
     try {
       if (id != "") {
         fetch(`http://localhost:8000/api/Fetch_Admin_By_Id/${id}`, {
@@ -128,7 +129,7 @@ export default function UserProfile() {
     <div>
       {admin_info.id &&
       admin_info.email &&
-      admin_info.picture &&
+      // admin_info.picture &&
       admin_info.phone_number ? (
         <GridContainer>
           <ToastContainer
@@ -314,17 +315,21 @@ export default function UserProfile() {
             </Form>
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
-            <Card profile>
-              <CardAvatar profile>
-                <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  <img
-                    src={"http://localhost:8000/" + admin_info.picture}
-                    alt="..."
-                  />
-                </a>
-              </CardAvatar>
-              <CardBody profile></CardBody>
-            </Card>
+            {admin_info.picture ? (
+              <Card profile>
+                <CardAvatar profile>
+                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                    <img
+                      src={"http://localhost:8000/" + admin_info.picture}
+                      alt="..."
+                    />
+                  </a>
+                </CardAvatar>
+                <CardBody profile></CardBody>
+              </Card>
+            ) : (
+              <div>No image</div>
+            )}
           </GridItem>
         </GridContainer>
       ) : (
