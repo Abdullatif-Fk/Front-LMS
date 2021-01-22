@@ -93,7 +93,7 @@ const  handleSubmit = (e) => {
 
                 </Typography>
                 <Typography > Do you have an account ?
-                     <Link href="/" >
+                     <Link href="/login" >
                        Log In
                 </Link>
                 </Typography>
