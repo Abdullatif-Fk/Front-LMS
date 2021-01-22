@@ -103,7 +103,14 @@ export default function AdminNavbarLinks() {
                       onClick={handleCloseProfile}
                       className={classes.dropdownItem}
                     >
-                      Logout
+                      <a
+                        onClick={() => {
+                          localStorage.removeItem("token", { path: "/" });
+                        }}
+                        href={`/`}
+                      >
+                        Logoutt
+                      </a>
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>

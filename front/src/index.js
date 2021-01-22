@@ -18,7 +18,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
-import { Router, Route, Switch ,Redirect} from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 // core components
 import Admin from "layouts/Admin.js";
@@ -29,25 +29,23 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const hist = createBrowserHistory();
 import { Provider } from "react-redux";
 import configureStore from "./store/store.js";
-import Login from "./components/Login/Login"
-import Register from "./components/Login/Register"
-import App from "./App"
-
+import Login from "./components/Login/Login";
+import Register from "./components/Login/Register";
+import App from "./App";
 
 // ReactDOM.render(
 //   <Provider store={configureStore()}>
 //     <Router history={hist}>
 //       <Switch>
-//         <Route path="/admin" component={Admin} /> 
+//         <Route path="/admin" component={Admin} />
 //        <Redirect from="/" to="/admin/students" />
-        
+
 //       </Switch>
 //     </Router>
-    
+
 //   </Provider>,
 //   document.getElementById("root")
 // );
-
 
 // <Route exact path="/login" component={Login} />
 //         <Route path="/register" component={Register} />
@@ -56,15 +54,30 @@ ReactDOM.render(
   <Provider store={configureStore()}>
     <Router history={hist}>
       <Switch>
-        <Route exact path="/login" component={Login} /> 
-        <Redirect from="/" to="/login" />
-        <Route path="/register" component={Register} /> 
-        <Route path="/admin" component={Admin} /> 
-
-
+        {/* <Route exact path="/login" component={Login} /> */}
+        <Redirect exact from="/" to="/login" />
+        <Redirect exact from="/admin/reload" to="/admin" />
+        {/* <Route path="/register" component={Register} /> */}
+        <Route path="/admin" component={Admin} />
+        <Route path="/login">
+          {!localStorage.getItem("token") ? (
+            <>
+              <Login />
+            </>
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/admin",
+              }}
+            />
+          )}
+        </Route>
+        <Route>
+          {" "}
+          <Login />
+        </Route>
       </Switch>
     </Router>
-    
   </Provider>,
   document.getElementById("root")
 );
