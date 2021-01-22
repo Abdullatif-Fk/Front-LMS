@@ -34,15 +34,33 @@ import Register from "./components/Login/Register"
 import App from "./App"
 
 
+// ReactDOM.render(
+//   <Provider store={configureStore()}>
+//     <Router history={hist}>
+//       <Switch>
+//         <Route path="/admin" component={Admin} /> 
+//        <Redirect from="/" to="/admin/students" />
+        
+//       </Switch>
+//     </Router>
+    
+//   </Provider>,
+//   document.getElementById("root")
+// );
+
+
+// <Route exact path="/login" component={Login} />
+//         <Route path="/register" component={Register} />
+//         <Route path="/admin" component={Admin}  />
 ReactDOM.render(
   <Provider store={configureStore()}>
     <Router history={hist}>
       <Switch>
-        {/* <Route path="/admin" component={Admin} /> 
-       <Redirect from="/" to="/admin/students" /> */}
-        <Route exact path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/admin" component={Admin}  />
+        <Route exact path="/login" component={Login} /> 
+        <Redirect from="/" to="/login" />
+        <Route path="/register" component={Register} /> 
+        <Route path="/admin" component={Admin} /> 
+
 
       </Switch>
     </Router>
@@ -50,7 +68,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-// ReactDOM.render(
-// <App/>,
-// document.getElementById("root")
-// );

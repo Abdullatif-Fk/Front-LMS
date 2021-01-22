@@ -40,11 +40,11 @@ const  handleSubmit = (e) => {
         console.log(adminData);
         localStorage.setItem('token',response.data.access_token);
         history.push("/admin");
-        // this.props.history.push('/admin/students')
 
     })
     .catch(err => {
         console.log(err);
+        
     })
 
 }
