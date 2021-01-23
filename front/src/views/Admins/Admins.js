@@ -176,9 +176,7 @@ export default function Admins() {
             <Card>
               <CardHeader color="primary">
                 <h4 className={classess.cardTitleWhite}>Admins Table</h4>
-                <p className={classess.cardCategoryWhite}>
-                  Here is a subtitle for this table
-                </p>
+                <p className={classess.cardCategoryWhite}></p>
               </CardHeader>
               <CardBody>
                 <Table

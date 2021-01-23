@@ -444,9 +444,7 @@ export default function Students() {
             <Card>
               <CardHeader color="primary">
                 <h4 className={classes.cardTitleWhite}>Students Table</h4>
-                <p className={classes.cardCategoryWhite}>
-                  Here is a subtitle for this table
-                </p>
+                <p className={classes.cardCategoryWhite}></p>
               </CardHeader>
               <CardBody>
                 <Table

@@ -109,7 +109,7 @@ export default function AdminNavbarLinks() {
                         }}
                         href={`/`}
                       >
-                        Logoutt
+                        Logout
                       </a>
                     </MenuItem>
                   </MenuList>

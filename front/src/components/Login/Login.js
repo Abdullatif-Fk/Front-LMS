@@ -20,6 +20,12 @@ import {
   Router,
   useHistory,
 } from "react-router-dom";
+
+import background from "./background.jpg";
+import logo from "./logo.jpeg";
+
+import { ToastContainer, toast } from "react-toastify";
+
 import { Provider } from "react-redux";
 import Admin from "layouts/Admin.js";
 // import { localStorage } from "localstorage-polyfill";
@@ -71,7 +77,15 @@ const Login = () => {
           history.push("/");
           history.replace("/admin/reload");
         } else {
-          alert(json.error);
+          toast.error(json.error, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       })
       .catch((err) => {
@@ -80,72 +94,114 @@ const Login = () => {
   };
 
   const paperStyle = {
-    padding: 20,
-    height: "70vh",
+    padding: "20px",
+    height: "50vh",
     width: 280,
-    margin: "20px auto",
+    margin: "auto",
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "center",
+    flexWrap: "wrap",
+    backgroundColor: "#F5F5DC",
+    border: "2px solid red",
+    borderRadius: "25px",
   };
+
   const avatarStyle = { backgroundColor: "#1bbd7e" };
   const btnstyle = { margin: "8px 0" };
   return (
-    <Grid>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
-          <Avatar style={avatarStyle}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <h2>Sign In</h2>
-        </Grid>
-        <TextField
-          label="Email"
-          placeholder="Enter Email"
-          onChange={(e) =>
-            setAdminData({
-              ...adminData,
-              email: e.target.value,
-            })
-          }
-          fullWidth
-          required
+    <div
+      style={{
+        backgroundColor: "red",
+        minHeight: "100vh",
+        alignContent: "center",
+        backgroundImage: `url(${background})`,
+      }}
+    >
+      <Grid
+        style={{
+          // backgroundColor: "blue",
+          minHeight: "100vh",
+          display: "flex",
+        }}
+      >
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
         />
-        <TextField
-          label="Password"
-          placeholder="Enter password"
-          type="password"
-          onChange={(e) =>
-            setAdminData({
-              ...adminData,
-              password: e.target.value,
-            })
-          }
-          fullWidth
-          required
-        />
-        <FormControlLabel
-          control={<Checkbox name="checkedB" color="primary" />}
-          label="Remember me"
-        />
+        <Paper elevation={10} style={paperStyle}>
+          <Grid align="center">
+            {/* <Avatar style={avatarStyle}>
+              <LockOutlinedIcon />
+            </Avatar> */}
+            <img
+              src={logo}
+              style={{
+                border: "2px solid transparent",
+                borderRadius: "25px",
+                maxHeight: "50px",
+                maxHeight: "50px",
+              }}
+            ></img>
+            <h2>Sign In</h2>
+          </Grid>
+          <TextField
+            style={{ paddingBottom: "15%" }}
+            label="Email"
+            placeholder="Enter Email"
+            onChange={(e) =>
+              setAdminData({
+                ...adminData,
+                email: e.target.value,
+              })
+            }
+            fullWidth
+            required
+          />
+          <TextField
+            style={{ paddingBottom: "15%" }}
+            label="Password"
+            placeholder="Enter password"
+            type="password"
+            onChange={(e) =>
+              setAdminData({
+                ...adminData,
+                password: e.target.value,
+              })
+            }
+            fullWidth
+            required
+          />
 
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          style={btnstyle}
-          onClick={handleSubmit}
-          fullWidth
-        >
-          Sign in
-        </Button>
+          <Button
+            type="submit"
+            style={{ paddingBottom: "20%" }}
+            color="primary"
+            variant="contained"
+            style={btnstyle}
+            onClick={handleSubmit}
+            fullWidth
+          >
+            Sign in
+          </Button>
 
-        {/* <Typography>
+          {/* <Typography>
           <Link href="">Forgot password ?</Link>
         </Typography>
         <Typography>
           {" "}
           Do you have an account ?<Link href="/register">Sign Up</Link>
         </Typography> */}
-      </Paper>
-    </Grid>
+        </Paper>
+      </Grid>
+    </div>
   );
 };
 

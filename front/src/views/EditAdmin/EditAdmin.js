@@ -154,18 +154,6 @@ export default function UserProfile() {
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={4}>
                       <CustomInput
-                        labelText="Active Admin (disabled)"
-                        formControlProps={{
-                          fullWidth: true,
-                        }}
-                        inputProps={{
-                          disabled: true,
-                        }}
-                      />
-                    </GridItem>
-
-                    <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
                         labelText="Email address"
                         id="email-address"
                         formControlProps={{
@@ -325,7 +313,11 @@ export default function UserProfile() {
                     />
                   </a>
                 </CardAvatar>
-                <CardBody profile></CardBody>
+                <CardBody profile>
+                  {admin_info.first_name &&
+                    admin_info.last_name &&
+                    admin_info.first_name + " " + admin_info.last_name}
+                </CardBody>
               </Card>
             ) : (
               <div>No image</div>

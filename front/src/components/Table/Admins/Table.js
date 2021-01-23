@@ -103,6 +103,7 @@ export default function CustomTable(props) {
                 return (
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
+                    style={{ fontSize: "large" }}
                     key={key}
                   >
                     {prop}

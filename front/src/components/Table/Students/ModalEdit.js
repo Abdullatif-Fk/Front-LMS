@@ -64,6 +64,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
           });
         } else {
           setArray2(arr + 1);
+
           toast.info(json.message, {
             position: "top-center",
             autoClose: 5000,
@@ -125,6 +126,7 @@ function ModalEdit({ show, handleClose, id, arr, setArray2, setCurrentPage }) {
         draggable
         pauseOnHover
       />
+
       <Modal.Header closeButton>
         <Modal.Title>Modal title</Modal.Title>
       </Modal.Header>
