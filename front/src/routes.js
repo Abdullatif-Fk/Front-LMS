@@ -17,6 +17,11 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import Add from "@material-ui/icons/Add";
+import AttachFile from "@material-ui/icons/AttachFile";
+import Class from "@material-ui/icons/Class";
+import StudentAdd from "@material-ui/icons/PersonAdd";
+import PersonOutline from "@material-ui/icons/PersonOutline";
 
 // core components/views for Admin layout
 import EditAdmin from "views/EditAdmin/EditAdmin.js";
@@ -40,14 +45,14 @@ const dashboardRoutes = [
   {
     path: "/adduser",
     name: "Add Admin",
-    icon: Person,
+    icon: Add,
     component: AddAdmin,
     layout: "/admin",
   },
   {
     path: "/students",
     name: "Students",
-    icon: Dashboard,
+    icon: StudentAdd,
     component: Students,
     layout: "/admin",
   },
@@ -61,14 +66,14 @@ const dashboardRoutes = [
   {
     path: "/fetchusers",
     name: "All admins",
-    icon: Dashboard,
+    icon: PersonOutline,
     component: Admins,
     layout: "/admin",
   },
   {
     path: "/classes",
     name: "Classes",
-    icon: Dashboard,
+    icon: Class,
     component: Classes,
     layout: "/admin",
   },
@@ -76,7 +81,7 @@ const dashboardRoutes = [
   {
     path: "/report",
     name: "Report",
-    icon: "content_paste",
+    icon: AttachFile,
     component: Report,
     layout: "/admin",
   },

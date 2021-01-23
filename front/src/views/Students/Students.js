@@ -240,10 +240,17 @@ export default function Students() {
         setPagination({
           data: students
             .filter((item) => {
-              return (
-                String(item.section_name) == String(Filter["section_name"]) &&
-                String(item.class_name) == String(Filter["class_name"])
-              );
+              if (Filter["section_name"] != undefined)
+                return (
+                  String(item.section_name) == String(Filter["section_name"]) &&
+                  String(item.class_name) == String(Filter["class_name"])
+                );
+              else {
+                return (
+                  // String(item.section_name) == String(Filter["section_name"]) &&
+                  String(item.class_name) == String(Filter["class_name"])
+                );
+              }
             })
             .map((value) => ({
               id: value.id,
@@ -404,9 +411,7 @@ export default function Students() {
             <Card>
               <CardHeader color="primary">
                 <h4 className={classess.cardTitleWhite}>Students Table</h4>
-                <p className={classess.cardCategoryWhite}>
-                  Here is a subtitle for this table
-                </p>
+                <p className={classess.cardCategoryWhite}></p>
                 <Row>
                   <Col sm={1}></Col>
                   <Col sm={4}>

@@ -342,9 +342,7 @@ export default function Students() {
             <Card>
               <CardHeader color="primary">
                 <h4 className={classess.cardTitleWhite}>Students Table</h4>
-                <p className={classess.cardCategoryWhite}>
-                  Here is a subtitle for this table
-                </p>
+                <p className={classess.cardCategoryWhite}></p>
                 <Row>
                   <Col className="left mb-2 text-center m-auto">
                     <button

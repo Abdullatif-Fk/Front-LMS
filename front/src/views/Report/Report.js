@@ -144,13 +144,13 @@ export default function Report() {
       if (name == "class_id")
         SetSendData({
           ...SendData,
-          ["section_id"]: Sections.filter((o) =>
-            SendData.class_id
-              ? SendData.class_id
-              : Classes[0].class_id == o.class_id
-          ).map((o) => {
-            return o.id;
-          })[0],
+          // ["section_id"]: Sections.filter((o) =>
+          //   SendData.class_id
+          //     ? SendData.class_id
+          //     : Classes[0].class_id == o.class_id
+          // ).map((o) => {
+          //   return o.id;
+          // })[0],
 
           [name]: value,
         });
@@ -720,6 +720,7 @@ export default function Report() {
             )}
             {SendData.section_id != undefined ? (
               <Row>
+                {console.log(SendData)}
                 <Form.Group controlId="exampleForm.ControlSelect3">
                   <Form.Label>Select Section</Form.Label>
                   <Form.Control

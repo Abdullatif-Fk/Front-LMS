@@ -77,7 +77,7 @@ function AddModal({ show, handleClose, arr, setArray2, setCurrentPage }) {
             progress: undefined,
           });
           setArray2(arr + 1);
-          setCurrentPage(0);
+          // setCurrentPage(0);
           handleClose();
         }
       });

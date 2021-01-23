@@ -13,6 +13,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import { Form } from "react-bootstrap";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { BaseModalBackground } from "styled-react-modal";
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -124,10 +125,8 @@ export default function UserProfile() {
             />
             <Form onSubmit={submit}>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Add Profile</h4>
-                <p className={classes.cardCategoryWhite}>
-                  Complete their profile
-                </p>
+                <h4 className={classes.cardTitleWhite}>Add New Admin</h4>
+                <p className={classes.cardCategoryWhite}>Add new profile</p>
               </CardHeader>
               <CardBody>
                 <GridContainer>
